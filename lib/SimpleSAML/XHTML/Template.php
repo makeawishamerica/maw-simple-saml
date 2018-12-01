@@ -313,6 +313,11 @@ class Template extends Response
         $twig = new Twig_Environment($loader, $options);
         $twig->addExtension(new Twig_Extensions_Extension_I18n());
 
+        $twig->addFunction('moduleURL', new \Twig_SimpleFunction('moduleURL', function ($url, $params = []) {
+            return Module::getModuleURL($url, $params);
+        }));
+
+
         // initialize some basic context
         $langParam = $this->configuration->getString('language.parameter.name', 'language');
         $twig->addGlobal('languageParameterName', $langParam);
