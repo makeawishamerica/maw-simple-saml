@@ -3,6 +3,7 @@
 namespace SimpleSAML;
 
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * This file implements functions to read and write to a group of memcache
@@ -184,7 +185,7 @@ class Memcache
      */
     public static function delete($key)
     {
-        assert(is_string($key));
+        Assert::string($key);
         Logger::debug("deleting key $key from memcache");
 
         // store this object to all groups of memcache servers
@@ -425,7 +426,7 @@ class Memcache
     {
         // get the configuration instance
         $config = Configuration::getInstance();
-        assert($config instanceof Configuration);
+        Assert::isInstanceOf($config, Configuration::class);
 
         // get the expire-value from the configuration
         $expire = $config->getInteger('memcache_store.expires', 0);

@@ -2,6 +2,8 @@
 
 namespace SimpleSAML\Error;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Class for creating exceptions from assertion failures.
  *
@@ -28,7 +30,7 @@ class Assertion extends Exception
      */
     public function __construct($assertion = null)
     {
-        assert($assertion === null || is_string($assertion));
+        Assert::nullOrString($assertion);
 
         $msg = 'Assertion failed: '.var_export($assertion, true);
         parent::__construct($msg);

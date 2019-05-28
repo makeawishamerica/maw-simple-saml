@@ -8,6 +8,7 @@ use SimpleSAML\Error;
 use SimpleSAML\Module;
 use SimpleSAML\Session;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * Authentication source which let the user chooses among a list of
@@ -58,8 +59,8 @@ class MultiAuth extends \SimpleSAML\Auth\Source
      */
     public function __construct($info, $config)
     {
-        assert(is_array($info));
-        assert(is_array($config));
+        Assert::isArray($info);
+        Assert::isArray($config);
 
         // Call the parent constructor first, as required by the interface
         parent::__construct($info, $config);
@@ -135,7 +136,7 @@ class MultiAuth extends \SimpleSAML\Auth\Source
      */
     public function authenticate(&$state)
     {
-        assert(is_array($state));
+        Assert::isArray($state);
 
         $state[self::AUTHID] = $this->authId;
         $state[self::SOURCESID] = $this->sources;
@@ -161,7 +162,7 @@ class MultiAuth extends \SimpleSAML\Auth\Source
         Utils\HTTP::redirectTrustedURL($url, $params);
 
         // The previous function never returns, so this code is never executed
-        assert(false);
+        Assert::true(false);
     }
 
 
@@ -180,8 +181,8 @@ class MultiAuth extends \SimpleSAML\Auth\Source
      */
     public static function delegateAuthentication($authId, $state)
     {
-        assert(is_string($authId));
-        assert(is_array($state));
+        assert::string($authId);
+        Assert::isArray($state);
 
         $as = Auth\Source::getById($authId);
         $valid_sources = array_map(
@@ -230,7 +231,7 @@ class MultiAuth extends \SimpleSAML\Auth\Source
      */
     public function logout(&$state)
     {
-        assert(is_array($state));
+        Assert::isArray($state);
 
         // Get the source that was used to authenticate
         $session = Session::getSessionFromRequest();
@@ -256,7 +257,7 @@ class MultiAuth extends \SimpleSAML\Auth\Source
      */
     public function setPreviousSource($source)
     {
-        assert(is_string($source));
+        Assert::string($source);
 
         $cookieName = 'multiauth_source_'.$this->authId;
 

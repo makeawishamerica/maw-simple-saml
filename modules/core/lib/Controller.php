@@ -13,6 +13,7 @@ use SimpleSAML\Utils;
 use SimpleSAML\XHTML\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Webmozart\Assert\Assert;
 
 /**
  * Controller class for the core module.
@@ -150,9 +151,9 @@ class Controller
             /** @var array $state */
             $state = Auth\State::loadExceptionState();
 
-            assert(array_key_exists(Auth\State::EXCEPTION_DATA, $state));
-            $e = $state[Auth\State::EXCEPTION_DATA];
+            Assert::keyExists($state, Auth\State::EXCEPTION_DATA);
 
+            $e = $state[Auth\State::EXCEPTION_DATA];
             throw $e;
         }
 

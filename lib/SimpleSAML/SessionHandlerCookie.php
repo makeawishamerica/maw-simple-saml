@@ -14,6 +14,7 @@
 namespace SimpleSAML;
 
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 abstract class SessionHandlerCookie extends SessionHandler
 {
@@ -158,8 +159,8 @@ abstract class SessionHandlerCookie extends SessionHandler
      */
     public function setCookie($sessionName, $sessionID, array $cookieParams = null)
     {
-        assert(is_string($sessionName));
-        assert(is_string($sessionID) || $sessionID === null);
+        Assert::string($sessionName);
+        Assert::nullOrString($sessionID);
 
         if ($cookieParams !== null) {
             $params = array_merge($this->getCookieParams(), $cookieParams);

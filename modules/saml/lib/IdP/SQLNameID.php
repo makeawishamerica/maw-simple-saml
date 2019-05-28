@@ -5,6 +5,7 @@ namespace SimpleSAML\Module\saml\IdP;
 use PDO;
 use SimpleSAML\Error;
 use SimpleSAML\Store;
+use Webmozart\Assert\Assert;
 
 /**
  * Helper class for working with persistent NameIDs stored in SQL datastore.
@@ -76,10 +77,10 @@ class SQLNameID
      */
     public static function add($idpEntityId, $spEntityId, $user, $value)
     {
-        assert(is_string($idpEntityId));
-        assert(is_string($spEntityId));
-        assert(is_string($user));
-        assert(is_string($value));
+        Assert::string($idpEntityId);
+        Assert::string($spEntityId);
+        Assert::string($user);
+        Assert::string($value);
 
         $store = self::getStore();
 
@@ -107,9 +108,9 @@ class SQLNameID
      */
     public static function get($idpEntityId, $spEntityId, $user)
     {
-        assert(is_string($idpEntityId));
-        assert(is_string($spEntityId));
-        assert(is_string($user));
+        Assert::string($idpEntityId);
+        Assert::string($spEntityId);
+        Assert::string($user);
 
         $store = self::getStore();
 
@@ -144,9 +145,9 @@ class SQLNameID
      */
     public static function delete($idpEntityId, $spEntityId, $user)
     {
-        assert(is_string($idpEntityId));
-        assert(is_string($spEntityId));
-        assert(is_string($user));
+        Assert::string($idpEntityId);
+        Assert::string($spEntityId);
+        assert::string($user);
 
         $store = self::getStore();
 
@@ -172,8 +173,8 @@ class SQLNameID
      */
     public static function getIdentities($idpEntityId, $spEntityId)
     {
-        assert(is_string($idpEntityId));
-        assert(is_string($spEntityId));
+        Assert::string($idpEntityId);
+        assert::string($spEntityId);
 
         $store = self::getStore();
 

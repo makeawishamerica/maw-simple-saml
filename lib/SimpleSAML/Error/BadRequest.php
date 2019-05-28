@@ -2,6 +2,8 @@
 
 namespace SimpleSAML\Error;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Exception which will show a 400 Bad Request error page.
  *
@@ -28,7 +30,7 @@ class BadRequest extends Error
      */
     public function __construct($reason)
     {
-        assert(is_string($reason));
+        Assert::string($reason);
 
         $this->reason = $reason;
         parent::__construct(['BADREQUEST', '%REASON%' => $this->reason]);

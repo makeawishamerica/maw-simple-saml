@@ -7,6 +7,7 @@ use SimpleSAML\Error;
 use SimpleSAML\Logger;
 use SimpleSAML\Module;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * Class for implementing authentication processing chains for IdPs.
@@ -56,8 +57,8 @@ class ProcessingChain
      */
     public function __construct($idpMetadata, $spMetadata, $mode = 'idp')
     {
-        assert(is_array($idpMetadata));
-        assert(is_array($spMetadata));
+        Assert::isArray($idpMetadata);
+        Assert::isArray($spMetadata);
 
         $this->filters = [];
 
@@ -95,8 +96,8 @@ class ProcessingChain
      */
     private static function addFilters(&$target, $src)
     {
-        assert(is_array($target));
-        assert(is_array($src));
+        Assert::isArray($target);
+        Assert::isArray($src);
 
         foreach ($src as $filter) {
             $fp = $filter->priority;
@@ -122,7 +123,7 @@ class ProcessingChain
      */
     private static function parseFilterList($filterSrc)
     {
-        assert(is_array($filterSrc));
+        Assert::isArray($filterSrc);
 
         $parsedFilters = [];
 
@@ -153,7 +154,7 @@ class ProcessingChain
      */
     private static function parseFilter($config, $priority)
     {
-        assert(is_array($config));
+        Assert::isArray($config);
 
         if (!array_key_exists('class', $config)) {
             throw new \Exception('Authentication processing filter without name given.');
@@ -197,9 +198,9 @@ class ProcessingChain
      */
     public function processState(&$state)
     {
-        assert(is_array($state));
-        assert(array_key_exists('ReturnURL', $state) || array_key_exists('ReturnCall', $state));
-        assert(!array_key_exists('ReturnURL', $state) || !array_key_exists('ReturnCall', $state));
+        Assert::isArray($state);
+        Assert::true(array_key_exists('ReturnURL', $state) || array_key_exists('ReturnCall', $state));
+        Assert::true(!array_key_exists('ReturnURL', $state) || !array_key_exists('ReturnCall', $state));
 
         $state[self::FILTERS_INDEX] = $this->filters;
 
@@ -243,7 +244,7 @@ class ProcessingChain
      */
     public static function resumeProcessing($state)
     {
-        assert(is_array($state));
+        Assert::isArray($state);
 
         while (count($state[self::FILTERS_INDEX]) > 0) {
             $filter = array_shift($state[self::FILTERS_INDEX]);
@@ -259,8 +260,8 @@ class ProcessingChain
 
         // Completed
 
-        assert(array_key_exists('ReturnURL', $state) || array_key_exists('ReturnCall', $state));
-        assert(!array_key_exists('ReturnURL', $state) || !array_key_exists('ReturnCall', $state));
+        Assert::true(array_key_exists('ReturnURL', $state) || array_key_exists('ReturnCall', $state));
+        Assert::true(!array_key_exists('ReturnURL', $state) || !array_key_exists('ReturnCall', $state));
 
 
         if (array_key_exists('ReturnURL', $state)) {
@@ -277,10 +278,10 @@ class ProcessingChain
             State::deleteState($state);
 
             $func = $state['ReturnCall'];
-            assert(is_callable($func));
+            Assert::isCallable($func);
 
             call_user_func($func, $state);
-            assert(false);
+            Assert::true(false);
         }
     }
 
@@ -298,9 +299,9 @@ class ProcessingChain
      */
     public function processStatePassive(&$state)
     {
-        assert(is_array($state));
+        Assert::isArray($state);
         // Should not be set when calling this method
-        assert(!array_key_exists('ReturnURL', $state));
+        Assert::keyNotExists($state, 'ReturnURL');
 
         // Notify filters about passive request
         $state['isPassive'] = true;
@@ -335,7 +336,7 @@ class ProcessingChain
      */
     public static function fetchProcessedState($id)
     {
-        assert(is_string($id));
+        Assert::string($id);
 
         return State::loadState($id, self::COMPLETED_STAGE);
     }
@@ -348,8 +349,8 @@ class ProcessingChain
      */
     private static function addUserID(&$state)
     {
-        assert(is_array($state));
-        assert(array_key_exists('Attributes', $state));
+        Assert::isArray($state);
+        Assert::keyExists($state, 'Attributes');
 
         if (isset($state['Destination']['userid.attribute'])) {
             $attributeName = $state['Destination']['userid.attribute'];

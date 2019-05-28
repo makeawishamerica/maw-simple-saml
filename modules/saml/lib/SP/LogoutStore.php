@@ -8,6 +8,7 @@ use SimpleSAML\Logger;
 use SimpleSAML\Session;
 use SimpleSAML\Store;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * A directory over logout information.
@@ -206,11 +207,11 @@ class LogoutStore
         $expire,
         $sessionId
     ) {
-        assert(is_string($authId));
-        assert(is_string($nameId));
-        assert(is_string($sessionIndex));
-        assert(is_int($expire));
-        assert(is_string($sessionId));
+        Assert::string($authId);
+        Assert::string($nameId);
+        Assert::string($sessionIndex);
+        Assert::integer($expire);
+        Assert::string($sessionId);
 
         self::createLogoutTable($store);
 
@@ -243,8 +244,8 @@ class LogoutStore
      */
     private static function getSessionsSQL(Store\SQL $store, $authId, $nameId)
     {
-        assert(is_string($authId));
-        assert(is_string($nameId));
+        Assert::string($authId);
+        Assert::string($nameId);
 
         self::createLogoutTable($store);
 
@@ -280,8 +281,8 @@ class LogoutStore
      */
     private static function getSessionsStore(Store $store, $authId, $nameId, array $sessionIndexes)
     {
-        assert(is_string($authId));
-        assert(is_string($nameId));
+        Assert::string($authId);
+        Assert::string($nameId);
 
         $res = [];
         foreach ($sessionIndexes as $sessionIndex) {
@@ -289,7 +290,7 @@ class LogoutStore
             if ($sessionId === null) {
                 continue;
             }
-            assert(is_string($sessionId));
+            Assert::string($sessionId);
             $res[$sessionIndex] = $sessionId;
         }
 
@@ -314,9 +315,9 @@ class LogoutStore
      */
     public static function addSession($authId, $nameId, $sessionIndex, $expire)
     {
-        assert(is_string($authId));
-        assert(is_string($sessionIndex) || $sessionIndex === null);
-        assert(is_int($expire));
+        Assert::string($authId);
+        Assert::nullorString($sessionIndex);
+        Assert::integer($expire);
 
         $session = Session::getSessionFromRequest();
         if ($session->isTransient()) {
@@ -373,7 +374,7 @@ class LogoutStore
      */
     public static function logoutSessions($authId, $nameId, array $sessionIndexes)
     {
-        assert(is_string($authId));
+        Assert::string($authId);
 
         $store = Store::getInstance();
         if ($store === false) {
@@ -391,7 +392,7 @@ class LogoutStore
 
         // Normalize SessionIndexes
         foreach ($sessionIndexes as &$sessionIndex) {
-            assert(is_string($sessionIndex));
+            Assert::string($sessionIndex);
             if (strlen($sessionIndex) > 50) {
                 $sessionIndex = sha1($sessionIndex);
             }

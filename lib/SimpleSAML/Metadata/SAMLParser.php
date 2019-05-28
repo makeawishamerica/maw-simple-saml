@@ -33,6 +33,7 @@ use SAML2\XML\saml\Attribute;
 use SAML2\XML\shibmd\Scope;
 use SimpleSAML\Logger;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * This is class for parsing of SAML 1.x and SAML 2.0 metadata.
@@ -187,7 +188,7 @@ class SAMLParser
         array $validators = [],
         array $parentExtensions = []
     ) {
-        assert($maxExpireTime === null || is_int($maxExpireTime));
+        Assert::nullOrInteger($maxExpireTime);
 
         $this->spDescriptors = [];
         $this->idpDescriptors = [];
@@ -285,7 +286,7 @@ class SAMLParser
      */
     public static function parseDocument($document)
     {
-        assert($document instanceof DOMDocument);
+        Assert::isInstanceOf($document, DOMDocument::class);
 
         $entityElement = self::findEntityDescriptor($document);
 
@@ -303,7 +304,7 @@ class SAMLParser
      */
     public static function parseElement($entityElement)
     {
-        assert($entityElement instanceof EntityDescriptor);
+        Assert::isInstanceOf($entityElement, EntityDescriptor::class);
         return new SAMLParser($entityElement, null, []);
     }
 
@@ -406,7 +407,7 @@ class SAMLParser
         array $validators = [],
         array $parentExtensions = []
     ) {
-        assert($maxExpireTime === null || is_int($maxExpireTime));
+        Assert::nullOrInteger($maxExpireTime);
 
         if ($element instanceof EntityDescriptor) {
             $ret = new SAMLParser($element, $maxExpireTime, $validators, $parentExtensions);
@@ -415,7 +416,7 @@ class SAMLParser
             return $ret;
         }
 
-        assert($element instanceof EntitiesDescriptor);
+        Assert::isInstanceOf($element, EntitiesDescriptor::class);
 
         $extensions = self::processExtensions($element, $parentExtensions);
         $expTime = self::getExpireTime($element, $maxExpireTime);
@@ -506,8 +507,8 @@ class SAMLParser
      */
     private function addExtensions(array &$metadata, array $roleDescriptor)
     {
-        assert(array_key_exists('scope', $roleDescriptor));
-        assert(array_key_exists('tags', $roleDescriptor));
+        Assert::keyExists($roleDescriptor, 'scope');
+        Assert::keyExists($roleDescriptor, 'tags');
 
         $scopes = array_merge($this->scopes, array_diff($roleDescriptor['scope'], $this->scopes));
         if (!empty($scopes)) {
@@ -870,7 +871,7 @@ class SAMLParser
      */
     private static function parseRoleDescriptorType(RoleDescriptor $element, $expireTime)
     {
-        assert($expireTime === null || is_int($expireTime));
+        Assert::nullOrInteger($expireTime);
 
         $ret = [];
 
@@ -921,7 +922,7 @@ class SAMLParser
      */
     private static function parseSSODescriptor(SSODescriptorType $element, $expireTime)
     {
-        assert($expireTime === null || is_int($expireTime));
+        Assert::nullOrInteger($expireTime);
 
         $sd = self::parseRoleDescriptorType($element, $expireTime);
 
@@ -949,7 +950,7 @@ class SAMLParser
      */
     private function processSPSSODescriptor(SPSSODescriptor $element, $expireTime)
     {
-        assert($expireTime === null || is_int($expireTime));
+        Assert::nullOrInteger($expireTime);
 
         $sp = self::parseSSODescriptor($element, $expireTime);
 
@@ -986,7 +987,7 @@ class SAMLParser
      */
     private function processIDPSSODescriptor(IDPSSODescriptor $element, $expireTime)
     {
-        assert($expireTime === null || is_int($expireTime));
+        Assert::nullOrInteger($expireTime);
 
         $idp = self::parseSSODescriptor($element, $expireTime);
 
@@ -1015,7 +1016,7 @@ class SAMLParser
         AttributeAuthorityDescriptor $element,
         $expireTime
     ) {
-        assert($expireTime === null || is_int($expireTime));
+        Assert::nullOrInteger($expireTime);
 
         $aad = self::parseRoleDescriptorType($element, $expireTime);
         $aad['entityid'] = $this->getEntityId();
@@ -1232,10 +1233,8 @@ class SAMLParser
      * @param array $sp The array with the SP's metadata.
      * @return void
      */
-    private static function parseAttributeConsumerService(AttributeConsumingService $element, &$sp)
+    private static function parseAttributeConsumerService(AttributeConsumingService $element, array &$sp)
     {
-        assert(is_array($sp));
-
         $sp['name'] = $element->getServiceName();
         $sp['description'] = $element->getServiceDescription();
 
@@ -1381,10 +1380,8 @@ class SAMLParser
      *
      * @return array with SP descriptors which supports one of the given protocols.
      */
-    private function getSPDescriptors($protocols)
+    private function getSPDescriptors(array $protocols)
     {
-        assert(is_array($protocols));
-
         $ret = [];
 
         foreach ($this->spDescriptors as $spd) {
@@ -1405,10 +1402,8 @@ class SAMLParser
      *
      * @return array with IdP descriptors which supports one of the given protocols.
      */
-    private function getIdPDescriptors($protocols)
+    private function getIdPDescriptors(array $protocols)
     {
-        assert(is_array($protocols));
-
         $ret = [];
 
         foreach ($this->idpDescriptors as $idpd) {
@@ -1433,10 +1428,8 @@ class SAMLParser
      * @return \SAML2\XML\md\EntityDescriptor The \DOMEntity which represents the EntityDescriptor.
      * @throws \Exception If the document is empty or the first element is not an EntityDescriptor element.
      */
-    private static function findEntityDescriptor($doc)
+    private static function findEntityDescriptor(DOMDocument $doc)
     {
-        assert($doc instanceof DOMDocument);
-
         // find the EntityDescriptor DOMElement. This should be the first (and only) child of the DOMDocument
         $ed = $doc->documentElement;
 
@@ -1460,7 +1453,7 @@ class SAMLParser
     public function validateSignature($certificates)
     {
         foreach ($certificates as $cert) {
-            assert(is_string($cert));
+            Assert::string($cert);
             $certFile = Utils\Config::getCertPath($cert);
             if (!file_exists($certFile)) {
                 throw new \Exception(
@@ -1535,7 +1528,7 @@ class SAMLParser
      */
     public function validateFingerprint($fingerprint, $algorithm)
     {
-        assert(is_string($fingerprint));
+        Assert::string($fingerprint);
 
         $fingerprint = strtolower(str_replace(":", "", $fingerprint));
 

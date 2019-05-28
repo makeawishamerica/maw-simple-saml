@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Webmozart\Assert\Assert;
 
 /**
  * Helper class for accessing information about modules.
@@ -134,7 +135,7 @@ class Module
         }
 
         $url = $request->server->get('PATH_INFO');
-        assert(substr($url, 0, 1) === '/');
+        Assert::same(substr($url, 0, 1), '/');
 
         /* clear the PATH_INFO option, so that a script can detect whether it is called with anything following the
          *'.php'-ending.
@@ -403,9 +404,9 @@ class Module
      */
     public static function resolveClass($id, $type, $subclass = null)
     {
-        assert(is_string($id));
-        assert(is_string($type));
-        assert(is_string($subclass) || $subclass === null);
+        Assert::string($id);
+        Assert::string($type);
+        Assert::nullOrString($subclass);
 
         $tmp = explode(':', $id, 2);
         if (count($tmp) === 1) {
@@ -454,8 +455,8 @@ class Module
      */
     public static function getModuleURL($resource, array $parameters = [])
     {
-        assert(is_string($resource));
-        assert($resource[0] !== '/');
+        Assert::string($resource);
+        Assert::notSame($resource[0], '/');
 
         $url = Utils\HTTP::getBaseURL().'module.php/'.$resource;
         if (!empty($parameters)) {
@@ -516,7 +517,7 @@ class Module
      */
     public static function callHooks($hook, &$data = null)
     {
-        assert(is_string($hook));
+        Assert::string($hook);
 
         $modules = self::getModules();
         $config = Configuration::getOptionalConfig()->getArray('module.enable', []);

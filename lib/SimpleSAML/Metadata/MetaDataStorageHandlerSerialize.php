@@ -5,6 +5,7 @@ namespace SimpleSAML\Metadata;
 use SimpleSAML\Configuration;
 use SimpleSAML\Logger;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * Class for handling metadata files in serialized format.
@@ -39,7 +40,7 @@ class MetaDataStorageHandlerSerialize extends MetaDataStorageSource
      */
     public function __construct($config)
     {
-        assert(is_array($config));
+        Assert::isArray($config);
 
         $globalConfig = Configuration::getInstance();
 
@@ -64,8 +65,8 @@ class MetaDataStorageHandlerSerialize extends MetaDataStorageSource
      */
     private function getMetadataPath($entityId, $set)
     {
-        assert(is_string($entityId));
-        assert(is_string($set));
+        Assert::string($entityId);
+        Assert::string($set);
 
         return $this->directory.'/'.rawurlencode($set).'/'.rawurlencode($entityId).self::EXTENSION;
     }
@@ -122,7 +123,7 @@ class MetaDataStorageHandlerSerialize extends MetaDataStorageSource
      */
     public function getMetadataSet($set)
     {
-        assert(is_string($set));
+        Assert::string($set);
 
         $ret = [];
 
@@ -177,8 +178,8 @@ class MetaDataStorageHandlerSerialize extends MetaDataStorageSource
      */
     public function getMetaData($entityId, $set)
     {
-        assert(is_string($entityId));
-        assert(is_string($set));
+        Assert::string($entityId);
+        Assert::string($set);
 
         $filePath = $this->getMetadataPath($entityId, $set);
 
@@ -221,9 +222,9 @@ class MetaDataStorageHandlerSerialize extends MetaDataStorageSource
      */
     public function saveMetadata($entityId, $set, $metadata)
     {
-        assert(is_string($entityId));
-        assert(is_string($set));
-        assert(is_array($metadata));
+        Assert::string($entityId);
+        Assert::string($set);
+        Assert::isArray($metadata);
 
         $filePath = $this->getMetadataPath($entityId, $set);
         $newPath = $filePath.'.new';
@@ -273,8 +274,8 @@ class MetaDataStorageHandlerSerialize extends MetaDataStorageSource
      */
     public function deleteMetadata($entityId, $set)
     {
-        assert(is_string($entityId));
-        assert(is_string($set));
+        Assert::string($entityId);
+        Assert::string($set);
 
         $filePath = $this->getMetadataPath($entityId, $set);
 

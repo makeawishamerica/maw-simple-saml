@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Session storage in the data store.
  *
@@ -8,6 +7,8 @@
  */
 
 namespace SimpleSAML;
+
+use Webmozart\Assert\Assert;
 
 class SessionHandlerStore extends SessionHandlerCookie
 {
@@ -41,7 +42,7 @@ class SessionHandlerStore extends SessionHandlerCookie
      */
     public function loadSession($sessionId = null)
     {
-        assert(is_string($sessionId) || $sessionId === null);
+        Assert::nullOrString($sessionId);
 
         if ($sessionId === null) {
             $sessionId = $this->getCookieSessionId();
@@ -53,7 +54,7 @@ class SessionHandlerStore extends SessionHandlerCookie
 
         $session = $this->store->get('session', $sessionId);
         if ($session !== null) {
-            assert($session instanceof Session);
+            Assert::isInstanceOf($session, Session::class);
             return $session;
         }
 

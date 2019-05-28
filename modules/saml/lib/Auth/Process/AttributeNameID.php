@@ -4,6 +4,7 @@ namespace SimpleSAML\Module\saml\Auth\Process;
 
 use SimpleSAML\Error;
 use SimpleSAML\Logger;
+use Webmozart\Assert\Assert;
 
 /**
  * Authentication processing filter to create a NameID from an attribute.
@@ -32,7 +33,7 @@ class AttributeNameID extends \SimpleSAML\Module\saml\BaseNameIDGenerator
     public function __construct($config, $reserved)
     {
         parent::__construct($config, $reserved);
-        assert(is_array($config));
+        Assert::isArray($config);
 
         if (!isset($config['Format'])) {
             throw new Error\Exception("AttributeNameID: Missing required option 'Format'.");

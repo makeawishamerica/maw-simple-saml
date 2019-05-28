@@ -5,6 +5,7 @@ namespace SimpleSAML\Module\core\Auth\Process;
 use SimpleSAML\Configuration;
 use SimpleSAML\Session;
 use SimpleSAML\SessionHandler;
+use Webmozart\Assert\Assert;
 
 /**
  * Extend IdP session and cookies.
@@ -17,7 +18,7 @@ class ExtendIdPSession extends \SimpleSAML\Auth\ProcessingFilter
      */
     public function process(&$state)
     {
-        assert(is_array($state));
+        Assert::isArray($state);
 
         if (empty($state['Expire']) || empty($state['Authority'])) {
             return;

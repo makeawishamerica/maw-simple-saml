@@ -4,6 +4,7 @@ namespace SimpleSAML\Module\saml\Auth\Process;
 
 use SAML2\Constants;
 use SimpleSAML\Error;
+use Webmozart\Assert\Assert;
 
 /**
  * Authentication processing filter to create an attribute from a NameID.
@@ -38,7 +39,7 @@ class NameIDAttribute extends \SimpleSAML\Auth\ProcessingFilter
     public function __construct($config, $reserved)
     {
         parent::__construct($config, $reserved);
-        assert(is_array($config));
+        Assert::isArray($config);
 
         if (isset($config['attribute'])) {
             $this->attribute = (string) $config['attribute'];
@@ -66,7 +67,7 @@ class NameIDAttribute extends \SimpleSAML\Auth\ProcessingFilter
      */
     private static function parseFormat($format)
     {
-        assert(is_string($format));
+        Assert::string($format);
 
         $ret = [];
         $pos = 0;
@@ -110,16 +111,16 @@ class NameIDAttribute extends \SimpleSAML\Auth\ProcessingFilter
      */
     public function process(&$state)
     {
-        assert(is_array($state));
-        assert(isset($state['Source']['entityid']));
-        assert(isset($state['Destination']['entityid']));
+        Assert::isArray($state);
+        Assert::keyExists($state['Source'], 'entityid');
+        Assert::keyExists($state['Destination'], 'entityid');
 
         if (!isset($state['saml:sp:NameID'])) {
             return;
         }
 
         $rep = $state['saml:sp:NameID'];
-        assert(!is_null($rep->getValue()));
+        Assert::notNull($rep->getValue());
         $rep->{'%'} = '%';
         if ($rep->getFormat() !== null) {
             $rep->setFormat(Constants::NAMEID_UNSPECIFIED);

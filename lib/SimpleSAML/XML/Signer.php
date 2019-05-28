@@ -17,6 +17,7 @@ use DOMText;
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 class Signer
 {
@@ -60,7 +61,7 @@ class Signer
      */
     public function __construct($options = [])
     {
-        assert(is_array($options));
+        Assert::isArray($options);
 
         if (array_key_exists('privatekey', $options)) {
             $pass = null;
@@ -100,8 +101,8 @@ class Signer
      */
     public function loadPrivateKeyArray($privatekey)
     {
-        assert(is_array($privatekey));
-        assert(array_key_exists('PEM', $privatekey));
+        Assert::isArray($privatekey);
+        Assert::keyExists($privatekey, 'PEM');
 
         $this->privateKey = new XMLSecurityKey(XMLSecurityKey::RSA_SHA256, ['type' => 'private']);
         if (array_key_exists('password', $privatekey)) {
@@ -127,9 +128,9 @@ class Signer
      */
     public function loadPrivateKey($file, $pass = null, $full_path = false)
     {
-        assert(is_string($file));
-        assert(is_string($pass) || $pass === null);
-        assert(is_bool($full_path));
+        Assert::string($file);
+        Assert::nullOrString($pass);
+        Assert::boolean($full_path);
 
         if (!$full_path) {
             $keyFile = Utils\Config::getCertPath($file);
@@ -165,7 +166,7 @@ class Signer
      */
     public function loadPublicKeyArray($publickey)
     {
-        assert(is_array($publickey));
+        Assert::isArray($publickey);
 
         if (!array_key_exists('PEM', $publickey)) {
             // We have a public key with only a fingerprint
@@ -192,8 +193,8 @@ class Signer
      */
     public function loadCertificate($file, $full_path = false)
     {
-        assert(is_string($file));
-        assert(is_bool($full_path));
+        Assert::string($file);
+        Assert::boolean($full_path);
 
         if (!$full_path) {
             $certFile = Utils\Config::getCertPath($file);
@@ -221,7 +222,7 @@ class Signer
      */
     public function setIDAttribute($idAttrName)
     {
-        assert(is_string($idAttrName));
+        Assert::string($idAttrName);
 
         $this->idAttrName = $idAttrName;
     }
@@ -241,8 +242,8 @@ class Signer
      */
     public function addCertificate($file, $full_path = false)
     {
-        assert(is_string($file));
-        assert(is_bool($full_path));
+        Assert::string($file);
+        Assert::boolean($full_path);
 
         if (!$full_path) {
             $certFile = Utils\Config::getCertPath($file);
@@ -278,10 +279,9 @@ class Signer
      */
     public function sign($node, $insertInto, $insertBefore = null)
     {
-        assert($node instanceof DOMElement);
-        assert($insertInto instanceof DOMElement);
-        assert($insertBefore === null || $insertBefore instanceof DOMElement ||
-            $insertBefore instanceof DOMComment || $insertBefore instanceof DOMText);
+        Assert::isInstanceOf($node, DOMElement::class);
+        Assert::isInstanceOf($insertInto, DOMElement::class);
+        Assert::nullOrInstanceOfAny($insertBefore, [DOMElement::class, DOMComment::class, DOMText::class]);
 
         $privateKey = $this->privateKey;
         if ($privateKey === false) {

@@ -5,6 +5,7 @@ namespace SimpleSAML;
 use SAML2\XML\saml\AttributeValue;
 use SimpleSAML\Error;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * The Session class holds information about a user session, and everything attached to it.
@@ -176,7 +177,7 @@ class Session implements \Serializable, Utils\ClearableState
             // initialize data for session check function if defined
             $checkFunction = self::$config->getArray('session.check_function', null);
             if (isset($checkFunction)) {
-                assert(is_callable($checkFunction));
+                Assert::isCallable($checkFunction);
                 call_user_func($checkFunction, $this, true);
             }
         }
@@ -323,7 +324,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public static function getSession($sessionId = null)
     {
-        assert(is_string($sessionId) || $sessionId === null);
+        Assert::nullOrString($sessionId);
 
         $sh = SessionHandler::getSessionHandler();
 
@@ -346,7 +347,7 @@ class Session implements \Serializable, Utils\ClearableState
             return null;
         }
 
-        assert($session instanceof self);
+        Assert::isInstanceOf($session, self::class);
 
         if ($checkToken) {
             $globalConfig = Configuration::getInstance();
@@ -369,7 +370,7 @@ class Session implements \Serializable, Utils\ClearableState
             // run session check function if defined
             $checkFunction = $globalConfig->getArray('session.check_function', null);
             if (isset($checkFunction)) {
-                assert(is_callable($checkFunction));
+                Assert::isCallable($checkFunction);
                 $check = call_user_func($checkFunction, $session);
                 if ($check !== true) {
                     Logger::warning('Session did not pass check function.');
@@ -426,7 +427,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public static function createSession($sessionId)
     {
-        assert(is_string($sessionId));
+        Assert::string($sessionId);
         self::$sessions[$sessionId] = null;
     }
 
@@ -567,7 +568,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function setRememberMeExpire($expire = null)
     {
-        assert(is_int($expire) || $expire === null);
+        Assert::nullOrInteger($expire);
 
         if ($expire === null) {
             $expire = time() + self::$config->getInteger('session.rememberme.lifetime', 14 * 86400);
@@ -591,8 +592,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function doLogin($authority, array $data = null)
     {
-        assert(is_string($authority));
-        assert(is_array($data) || $data === null);
+        Assert::string($authority);
+        Assert::nullOrArray($data);
 
         Logger::debug('Session: doLogin("'.$authority.'")');
 
@@ -710,8 +711,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     private function callLogoutHandlers($authority)
     {
-        assert(is_string($authority));
-        assert(isset($this->authData[$authority]));
+        Assert::string($authority);
+        Assert::notNull($this->authData[$authority]);
 
         if (empty($this->authData[$authority]['LogoutHandlers'])) {
             return;
@@ -746,7 +747,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function isValid($authority)
     {
-        assert(is_string($authority));
+        Assert::string($authority);
 
         if (!isset($this->authData[$authority])) {
             Logger::debug(
@@ -774,7 +775,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function updateSessionCookies($params = null)
     {
-        assert(is_null($params) || is_array($params));
+        Assert::nullOrArray($params);
 
         $sessionHandler = SessionHandler::getSessionHandler();
 
@@ -802,8 +803,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function setAuthorityExpire($authority, $expire = null)
     {
-        assert(isset($this->authData[$authority]));
-        assert(is_int($expire) || $expire === null);
+        Assert::notNull($this->authData[$authority]);
+        Assert::nullOrInteger($expire);
 
         $this->markDirty();
 
@@ -826,7 +827,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function registerLogoutHandler($authority, $classname, $functionname)
     {
-        assert(isset($this->authData[$authority]));
+        Assert::notNull($this->authData[$authority]);
 
         $logout_handler = [$classname, $functionname];
 
@@ -852,8 +853,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function deleteData($type, $id)
     {
-        assert(is_string($type));
-        assert(is_string($id));
+        Assert::string($type);
+        Assert::string($id);
 
         if (!array_key_exists($type, $this->dataStore)) {
             return;
@@ -882,9 +883,9 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function setData($type, $id, $data, $timeout = null)
     {
-        assert(is_string($type));
-        assert(is_string($id));
-        assert(is_int($timeout) || $timeout === null || $timeout === self::DATA_TIMEOUT_SESSION_END);
+        Assert::string($type);
+        Assert::string($id);
+        Assert::true(is_int($timeout) || $timeout === null || $timeout === self::DATA_TIMEOUT_SESSION_END);
 
         if ($timeout === null) {
             // use the default timeout
@@ -957,8 +958,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function getData($type, $id)
     {
-        assert(is_string($type));
-        assert($id === null || is_string($id));
+        Assert::string($type);
+        Assert::nullOrString($id);
 
         if ($id === null) {
             return null;
@@ -990,7 +991,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function getDataOfType($type)
     {
-        assert(is_string($type));
+        Assert::string($type);
 
         if (!array_key_exists($type, $this->dataStore)) {
             return [];
@@ -1013,7 +1014,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function getAuthState($authority)
     {
-        assert(is_string($authority));
+        Assert::string($authority);
 
         if (!isset($this->authData[$authority])) {
             return null;
@@ -1046,9 +1047,9 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function addAssociation($idp, array $association)
     {
-        assert(is_string($idp));
-        assert(isset($association['id']));
-        assert(isset($association['Handler']));
+        Assert::string($idp);
+        Assert::notNull($association['id']);
+        Assert::notNull($association['Handler']);
 
         if (!isset($this->associations)) {
             $this->associations = [];
@@ -1074,7 +1075,7 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function getAssociations($idp)
     {
-        assert(is_string($idp));
+        Assert::string($idp);
 
         if (!isset($this->associations)) {
             $this->associations = [];
@@ -1109,8 +1110,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function terminateAssociation($idp, $associationId)
     {
-        assert(is_string($idp));
-        assert(is_string($associationId));
+        Assert::string($idp);
+        Assert::string($associationId);
 
         if (!isset($this->associations)) {
             return;
@@ -1135,8 +1136,8 @@ class Session implements \Serializable, Utils\ClearableState
      */
     public function getAuthData($authority, $name)
     {
-        assert(is_string($authority));
-        assert(is_string($name));
+        Assert::string($authority);
+        Assert::string($name);
 
         if (!isset($this->authData[$authority][$name])) {
             return null;

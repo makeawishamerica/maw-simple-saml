@@ -3,6 +3,7 @@
 namespace SimpleSAML\Metadata;
 
 use SimpleSAML\Configuration;
+use Webmozart\Assert\Assert;
 
 /**
  * This file defines a flat file metadata source.
@@ -43,7 +44,7 @@ class MetaDataStorageHandlerFlatFile extends MetaDataStorageSource
      */
     protected function __construct($config)
     {
-        assert(is_array($config));
+        Assert::isArray($config);
 
         // get the configuration
         $globalConfig = Configuration::getInstance();

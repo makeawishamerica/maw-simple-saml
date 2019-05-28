@@ -20,6 +20,7 @@ use SimpleSAML\Configuration;
 use SimpleSAML\Error as SSP_Error;
 use SimpleSAML\Logger;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * Common code for building SAML 2 messages based on the available metadata.
@@ -317,7 +318,7 @@ class Message
         // load the new private key if it exists
         $keyArray = Utils\Crypto::loadPrivateKey($dstMetadata, false, 'new_');
         if ($keyArray !== null) {
-            assert(isset($keyArray['PEM']));
+            assert::keyExists($keyArray, 'PEM');
 
             $key = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, ['type' => 'private']);
             if (array_key_exists('password', $keyArray)) {
@@ -329,7 +330,7 @@ class Message
 
         // find the existing private key
         $keyArray = Utils\Crypto::loadPrivateKey($dstMetadata, true);
-        assert(isset($keyArray['PEM']));
+        Assert::keyExists($keyArray, 'PEM');
 
         $key = new XMLSecurityKey(XMLSecurityKey::RSA_1_5, ['type' => 'private']);
         if (array_key_exists('password', $keyArray)) {
@@ -382,7 +383,7 @@ class Message
         Configuration $dstMetadata,
         $assertion
     ) {
-        assert($assertion instanceof Assertion || $assertion instanceof EncryptedAssertion);
+        Assert::isInstanceOfAny($assertion, [\SAML2\Assertion::class, \SAML2\EncryptedAssertion::class]);
 
         if ($assertion instanceof Assertion) {
             $encryptAssertion = $srcMetadata->getBoolean('assertion.encryption', null);
@@ -667,8 +668,8 @@ class Message
         $assertion,
         $responseSigned
     ) {
-        assert($assertion instanceof Assertion || $assertion instanceof EncryptedAssertion);
-        assert(is_bool($responseSigned));
+        Assert::isInstanceOfAny($assertion, [\SAML2\Assertion::class, \SAML2\EncryptedAssertion::class]);
+        Assert::boolean($responseSigned);
 
         $assertion = self::decryptAssertion($idpMetadata, $spMetadata, $assertion);
         self::decryptAttributes($idpMetadata, $spMetadata, $assertion);

@@ -7,6 +7,7 @@ use SimpleSAML\Error;
 use SimpleSAML\IdP;
 use SimpleSAML\Logger;
 use SimpleSAML\Utils;
+use Webmozart\Assert\Assert;
 
 /**
  * Class that handles traditional logout.
@@ -66,7 +67,7 @@ class TraditionalLogoutHandler implements LogoutHandlerInterface
 
             // Try the next SP
             $this->logoutNextSP($state);
-            assert(false);
+            Assert::true(false);
         }
     }
 
@@ -102,8 +103,8 @@ class TraditionalLogoutHandler implements LogoutHandlerInterface
      */
     public function onResponse($assocId, $relayState, Error\Exception $error = null)
     {
-        assert(is_string($assocId));
-        assert(is_string($relayState) || $relayState === null);
+        Assert::string($assocId);
+        Assert::nullOrString($relayState);
 
         if ($relayState === null) {
             throw new Error\Exception('RelayState lost during logout.');

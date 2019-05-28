@@ -3,6 +3,7 @@
 namespace SimpleSAML;
 
 use SimpleSAML\Logger\ErrorLogLoggingHandler;
+use Webmozart\Assert\Assert;
 
 /**
  * The main logger class for SimpleSAMLphp.
@@ -355,7 +356,7 @@ class Logger
      */
     public static function maskErrors($mask)
     {
-        assert(is_int($mask));
+        Assert::integer($mask);
 
         $currentEnabled = error_reporting();
         self::$logLevelStack[] = [$currentEnabled, self::$logMask];
@@ -421,7 +422,7 @@ class Logger
 
         // get the configuration
         $config = Configuration::getInstance();
-        assert($config instanceof Configuration);
+        Assert::isInstanceOf($config, Configuration::class);
 
         // setting minimum log_level
         self::$logLevel = $config->getInteger('logging.level', self::INFO);
