@@ -15,7 +15,7 @@
             <factory class="SimpleSAML\Session" method="getSessionFromRequest" />
         </service>
 
-        <service class="SimpleSAML\Auth\AuthenticationFactory">
+        <service id="SimpleSAML\Auth\AuthenticationFactory" class="SimpleSAML\Auth\AuthenticationFactory">
             <argument type="service" id="SimpleSAML\Configuration"/>
         </service>
     </services>
