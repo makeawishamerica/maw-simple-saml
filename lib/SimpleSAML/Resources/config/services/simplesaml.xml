@@ -17,6 +17,7 @@
 
         <service id="SimpleSAML\Auth\AuthenticationFactory" class="SimpleSAML\Auth\AuthenticationFactory">
             <argument type="service" id="SimpleSAML\Configuration"/>
+            <argument type="service" id="SimpleSAML\Session"/>
         </service>
     </services>
 </container>
