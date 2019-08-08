@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleSAML\Module\admin;
+namespace SimpleSAML\Module\admin\Controller;
 
 use SimpleSAML\Configuration;
 use SimpleSAML\HTTP\RunnableResponse;
