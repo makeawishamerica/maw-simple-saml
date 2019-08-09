@@ -80,8 +80,8 @@ class LoginControllerTest extends ClearStateTestCase
         $session = Session::getSessionFromRequest();
         $factory = new AuthenticationFactory($this->config, $session);
 
-        /** @var \SimpleSAML\HTTP\RunnableResponse $response */
         $c = new LoginController($this->config, $session, $factory);
+        /** @var \SimpleSAML\HTTP\RunnableResponse $response */
         $response = $c->login($request);
 
         $this->assertInstanceOf(RunnableResponse::class, $response);
@@ -119,8 +119,8 @@ class LoginControllerTest extends ClearStateTestCase
         $session = Session::getSessionFromRequest();
         $factory = new AuthenticationFactory($this->config, $session);
 
-        /** @var \SimpleSAML\XHTML\Template $response */
         $c = new LoginController($this->config, $session, $factory);
+        /** @var \SimpleSAML\XHTML\Template $response */
         $response = $c->login($request);
 
         $this->assertInstanceOf(Template::class, $response);
@@ -143,7 +143,7 @@ class LoginControllerTest extends ClearStateTestCase
         $session = Session::getSessionFromRequest();
         $factory = new AuthenticationFactory($this->config, $session);
         $c = new LoginController($this->config, $session, $factory);
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $c->login($request, 'invalid-auth-source');
     }
 
@@ -177,8 +177,8 @@ class LoginControllerTest extends ClearStateTestCase
         $factory = new AuthenticationFactory($this->config, $session);
 
         $request = new Request();
-        /** @var \Symfony\Component\HttpFoundation\RedirectResponse $response */
         $c = new LoginController($this->config, $session, $factory);
+        /** @var \Symfony\Component\HttpFoundation\RedirectResponse $response */
         $response = $c->login($request);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertEquals(
