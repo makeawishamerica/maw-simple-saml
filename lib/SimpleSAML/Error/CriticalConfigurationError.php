@@ -47,7 +47,7 @@ class CriticalConfigurationError extends ConfigurationError
      * @param string|null $file The configuration file that originated this error.
      * @param array|null $config The configuration array that led to this problem.
      */
-    public function __construct($reason = null, $file = null, $config = null)
+    public function __construct(?string $reason = null, ?string $file = null, ?array $config = null)
     {
         if ($config === null) {
             $config = self::$minimum_config;
@@ -66,9 +66,9 @@ class CriticalConfigurationError extends ConfigurationError
     /**
      * @param \Exception $exception
      *
-     * @return CriticalConfigurationError
+     * @return \Exception
      */
-    public static function fromException(\Exception $exception)
+    public static function fromException(\Exception $exception) : \Exception
     {
         $reason = null;
         $file = null;

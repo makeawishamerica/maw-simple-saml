@@ -26,10 +26,8 @@ class BadRequest extends Error
      *
      * @param string $reason  Description of why the request was unacceptable.
      */
-    public function __construct($reason)
+    public function __construct(string $reason)
     {
-        assert(is_string($reason));
-
         $this->reason = $reason;
         parent::__construct(['BADREQUEST', '%REASON%' => $this->reason]);
         $this->httpCode = 400;
@@ -41,7 +39,7 @@ class BadRequest extends Error
      *
      * @return string  The reason why the request was invalid.
      */
-    public function getReason()
+    public function getReason() : string
     {
         return $this->reason;
     }

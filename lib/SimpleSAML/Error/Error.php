@@ -76,7 +76,7 @@ class Error extends Exception
      * @param \Exception $cause The exception which caused this fatal error (if any). Optional.
      * @param int|null  $httpCode The HTTP response code to use. Optional.
      */
-    public function __construct($errorCode, \Exception $cause = null, $httpCode = null)
+    public function __construct($errorCode, \Exception $cause = null, ?int $httpCode = null)
     {
         assert(is_string($errorCode) || is_array($errorCode));
 
@@ -118,7 +118,7 @@ class Error extends Exception
      *
      * @return string  The error code.
      */
-    public function getErrorCode()
+    public function getErrorCode() : string
     {
         return $this->errorCode;
     }
@@ -129,7 +129,7 @@ class Error extends Exception
      *
      * @return array  The parameters.
      */
-    public function getParameters()
+    public function getParameters() : array
     {
         return $this->parameters;
     }
@@ -140,7 +140,7 @@ class Error extends Exception
      *
      * @return string  The error title tag.
      */
-    public function getDictTitle()
+    public function getDictTitle() : string
     {
         return $this->dictTitle;
     }
@@ -151,7 +151,7 @@ class Error extends Exception
      *
      * @return string  The error description tag.
      */
-    public function getDictDescr()
+    public function getDictDescr() : string
     {
         return $this->dictDescr;
     }
@@ -163,7 +163,7 @@ class Error extends Exception
      * This should be overridden by subclasses who want a different return code than 500 Internal Server Error.
      * @return void
      */
-    protected function setHTTPCode()
+    protected function setHTTPCode() : void
     {
         http_response_code($this->httpCode);
     }
@@ -174,7 +174,7 @@ class Error extends Exception
      *
      * @return array  The array with the error report data.
      */
-    protected function saveError()
+    protected function saveError() : array
     {
         $data = $this->format(true);
         $emsg = array_shift($data);
@@ -217,7 +217,7 @@ class Error extends Exception
      * This method displays a standard SimpleSAMLphp error page and exits.
      * @return void
      */
-    public function show()
+    public function show() : void
     {
         $this->setHTTPCode();
 

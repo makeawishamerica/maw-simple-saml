@@ -2,6 +2,8 @@
 
 namespace SimpleSAML\Error;
 
+use Exception;
+
 /**
  * Baseclass for auth source exceptions.
  *
@@ -32,11 +34,8 @@ class AuthSource extends Error
      * @param string $reason  Description of the error.
      * @param \Exception|null $cause
      */
-    public function __construct($authsource, $reason, $cause = null)
+    public function __construct(string $authsource, string $reason, ?Exception $cause = null)
     {
-        assert(is_string($authsource));
-        assert(is_string($reason));
-
         $this->authsource = $authsource;
         $this->reason = $reason;
         parent::__construct(
@@ -57,7 +56,7 @@ class AuthSource extends Error
      *
      * @return string  Authsource module name.
      */
-    public function getAuthSource()
+    public function getAuthSource() : string
     {
         return $this->authsource;
     }
@@ -68,7 +67,7 @@ class AuthSource extends Error
      *
      * @return string  The reason why the request was invalid.
      */
-    public function getReason()
+    public function getReason() : string
     {
         return $this->reason;
     }

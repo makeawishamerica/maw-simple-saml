@@ -26,10 +26,8 @@ class Assertion extends Exception
      * @param string|null $assertion  The assertion which failed, or null if the assert-function was
      *                                given an expression.
      */
-    public function __construct($assertion = null)
+    public function __construct(?string $assertion = null)
     {
-        assert($assertion === null || is_string($assertion));
-
         $msg = 'Assertion failed: '.var_export($assertion, true);
         parent::__construct($msg);
 
@@ -42,7 +40,7 @@ class Assertion extends Exception
      *
      * @return string|null  The assertion which failed, or null if the assert-function was called with an expression.
      */
-    public function getAssertion()
+    public function getAssertion() : ?string
     {
         return $this->assertion;
     }
@@ -55,9 +53,8 @@ class Assertion extends Exception
      * disabled.
      * @return void
      */
-    public static function installHandler()
+    public static function installHandler() : void
     {
-
         assert_options(ASSERT_WARNING, 0);
         assert_options(ASSERT_QUIET_EVAL, 0);
         assert_options(ASSERT_CALLBACK, [Assertion::class, 'onAssertion']);
@@ -74,9 +71,8 @@ class Assertion extends Exception
      * @param mixed $message  The expression which was passed to the assert-function.
      * @return void
      */
-    public static function onAssertion($file, $line, $message)
+    public static function onAssertion(string $file, int $line, $message) : void
     {
-
         if (!empty($message)) {
             $exception = new self($message);
         } else {
