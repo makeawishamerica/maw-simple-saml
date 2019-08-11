@@ -57,12 +57,12 @@ class HTTPPost
      * @return void
      */
     public function sendResponse(
-        $response,
+        string $response,
         Configuration $idpmd,
         Configuration $spmd,
-        $relayState,
-        $shire
-    ) {
+        ?string $relayState,
+        string $shire
+    ) : void {
         Utils\XML::checkSAMLMessage($response, 'saml11');
 
         $privatekey = Utils\Crypto::loadPrivateKey($idpmd, true);
@@ -129,7 +129,7 @@ class HTTPPost
      * @return \SimpleSAML\XML\Shib13\AuthnResponse The response decoded into an object.
      * @throws \Exception If there is no SAMLResponse parameter.
      */
-    public function decodeResponse($post)
+    public function decodeResponse(array $post) : AuthnResponse
     {
         assert(is_array($post));
 
