@@ -21,10 +21,8 @@ class Redis extends Store
      * Initialize the Redis data store.
      * @param \Predis\Client|null $redis
      */
-    public function __construct($redis = null)
+    public function __construct(?Client $redis = null)
     {
-        assert($redis === null || is_subclass_of($redis, Client::class));
-
         if (!class_exists(Client::class)) {
             throw new Error\CriticalConfigurationError('predis/predis is not available.');
         }
@@ -72,11 +70,8 @@ class Redis extends Store
      *
      * @return mixed|null The value associated with that key, or null if there's no such key.
      */
-    public function get($type, $key)
+    public function get(string $type, string $key)
     {
-        assert(is_string($type));
-        assert(is_string($key));
-
         $result = $this->redis->get("{$type}.{$key}");
 
         if ($result === false || $result === null) {
@@ -96,11 +91,9 @@ class Redis extends Store
      * @param int|null $expire The expiration time (unix timestamp), or null if it never expires.
      * @return void
      */
-    public function set($type, $key, $value, $expire = null)
+    public function set(string $type, string $key, $value, ?int $expire = null) : void
     {
-        assert(is_string($type));
-        assert(is_string($key));
-        assert($expire === null || (is_int($expire) && $expire > 2592000));
+        assert($expire === null || $expire > 2592000);
 
         $serialized = serialize($value);
 
@@ -120,11 +113,8 @@ class Redis extends Store
      * @param string $key The key to delete.
      * @return void
      */
-    public function delete($type, $key)
+    public function delete(string $type, string $key) : void
     {
-        assert(is_string($type));
-        assert(is_string($key));
-
         $this->redis->del("{$type}.{$key}");
     }
 }

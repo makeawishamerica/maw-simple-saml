@@ -81,7 +81,7 @@ class SQL extends Store
      * Initialize the table-version table.
      * @return void
      */
-    private function initTableVersionTable()
+    private function initTableVersionTable() : void
     {
         $this->tableVersions = [];
 
@@ -105,7 +105,7 @@ class SQL extends Store
      * Initialize key-value table.
      * @return void
      */
-    private function initKVTable()
+    private function initKVTable() : void
     {
         $current_version = $this->getTableVersion('kvstore');
 
@@ -176,10 +176,8 @@ class SQL extends Store
      *
      * @return int The table version, or 0 if the table doesn't exist.
      */
-    public function getTableVersion($name)
+    public function getTableVersion(string $name) : int
     {
-        assert(is_string($name));
-
         if (!isset($this->tableVersions[$name])) {
             return 0;
         }
@@ -195,11 +193,8 @@ class SQL extends Store
      * @param int $version Table version.
      * @return void
      */
-    public function setTableVersion($name, $version)
+    public function setTableVersion(string $name, int $version) : void
     {
-        assert(is_string($name));
-        assert(is_int($version));
-
         $this->insertOrUpdate(
             $this->prefix.'_tableVersion',
             ['_name'],
@@ -219,10 +214,8 @@ class SQL extends Store
      * @param array $data Associative array with columns.
      * @return void
      */
-    public function insertOrUpdate($table, array $keys, array $data)
+    public function insertOrUpdate(string $table, array $keys, array $data) : void
     {
-        assert(is_string($table));
-
         $colNames = '('.implode(', ', array_keys($data)).')';
         $values = 'VALUES(:'.implode(', :', array_keys($data)).')';
 
@@ -276,7 +269,7 @@ class SQL extends Store
      * Clean the key-value table of expired entries.
      * @return void
      */
-    private function cleanKVStore()
+    private function cleanKVStore() : void
     {
         Logger::debug('store.sql: Cleaning key-value store.');
 
@@ -296,11 +289,8 @@ class SQL extends Store
      *
      * @return mixed|null The value associated with that key, or null if there's no such key.
      */
-    public function get($type, $key)
+    public function get(string $type, string $key)
     {
-        assert(is_string($type));
-        assert(is_string($key));
-
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
@@ -340,11 +330,9 @@ class SQL extends Store
      * @param int|null $expire The expiration time (unix timestamp), or null if it never expires.
      * @return void
      */
-    public function set($type, $key, $value, $expire = null)
+    public function set(string $type, string $key, $value, ?int $expire = null) : void
     {
-        assert(is_string($type));
-        assert(is_string($key));
-        assert($expire === null || (is_int($expire) && $expire > 2592000));
+        assert($expire === null || $expire > 2592000);
 
         if (rand(0, 1000) < 10) {
             $this->cleanKVStore();
@@ -379,11 +367,8 @@ class SQL extends Store
      * @param string $key The key to delete.
      * @return void
      */
-    public function delete($type, $key)
+    public function delete(string $type, string $key) : void
     {
-        assert(is_string($type));
-        assert(is_string($key));
-
         if (strlen($key) > 50) {
             $key = sha1($key);
         }
