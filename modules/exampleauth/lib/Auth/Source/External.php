@@ -104,7 +104,7 @@ class External extends \SimpleSAML\Auth\Source
      * @param array &$state  Information about the current authentication.
      * @return void
      */
-    public function authenticate(&$state)
+    public function authenticate(array &$state) : void
     {
         assert(is_array($state));
 
@@ -268,7 +268,7 @@ class External extends \SimpleSAML\Auth\Source
      * @param array &$state  The logout state array.
      * @return void
      */
-    public function logout(&$state)
+    public function logout(array &$state) : void
     {
         assert(is_array($state));
 

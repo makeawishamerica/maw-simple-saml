@@ -54,11 +54,8 @@ class ProcessingChain
      * @param array $spMetadata  The metadata for the SP.
      * @param string $mode
      */
-    public function __construct($idpMetadata, $spMetadata, $mode = 'idp')
+    public function __construct(array $idpMetadata, array $spMetadata, string $mode = 'idp')
     {
-        assert(is_array($idpMetadata));
-        assert(is_array($spMetadata));
-
         $this->filters = [];
 
         $config = Configuration::getInstance();
@@ -93,11 +90,8 @@ class ProcessingChain
      * @param array $src  Source filters. May be unsorted.
      * @return void
      */
-    private static function addFilters(&$target, $src)
+    private static function addFilters(array &$target, array $src) : void
     {
-        assert(is_array($target));
-        assert(is_array($src));
-
         foreach ($src as $filter) {
             $fp = $filter->priority;
 
@@ -120,10 +114,8 @@ class ProcessingChain
      * @param array $filterSrc  Array with filter configuration.
      * @return array  Array of ProcessingFilter objects.
      */
-    private static function parseFilterList($filterSrc)
+    private static function parseFilterList(array $filterSrc) : array
     {
-        assert(is_array($filterSrc));
-
         $parsedFilters = [];
 
         foreach ($filterSrc as $priority => $filter) {
@@ -151,10 +143,8 @@ class ProcessingChain
      *                           definition.)
      * @return \SimpleSAML\Auth\ProcessingFilter  The parsed filter.
      */
-    private static function parseFilter($config, $priority)
+    private static function parseFilter(array $config, int $priority) : ProcessingFilter
     {
-        assert(is_array($config));
-
         if (!array_key_exists('class', $config)) {
             throw new \Exception('Authentication processing filter without name given.');
         }
@@ -195,9 +185,8 @@ class ProcessingChain
      * @throws \SimpleSAML\Error\UnserializableException
      * @return void
      */
-    public function processState(&$state)
+    public function processState(array &$state) : void
     {
-        assert(is_array($state));
         assert(array_key_exists('ReturnURL', $state) || array_key_exists('ReturnCall', $state));
         assert(!array_key_exists('ReturnURL', $state) || !array_key_exists('ReturnCall', $state));
 
@@ -241,10 +230,8 @@ class ProcessingChain
      * @param array $state  The state we are processing.
      * @return void
      */
-    public static function resumeProcessing($state)
+    public static function resumeProcessing(array $state) : void
     {
-        assert(is_array($state));
-
         while (count($state[self::FILTERS_INDEX]) > 0) {
             $filter = array_shift($state[self::FILTERS_INDEX]);
             try {
@@ -296,9 +283,8 @@ class ProcessingChain
      * @param array &$state  The state we are processing.
      * @return void
      */
-    public function processStatePassive(&$state)
+    public function processStatePassive(array &$state) : void
     {
-        assert(is_array($state));
         // Should not be set when calling this method
         assert(!array_key_exists('ReturnURL', $state));
 
@@ -326,6 +312,7 @@ class ProcessingChain
         }
     }
 
+
     /**
      * Retrieve a state which has finished processing.
      *
@@ -333,10 +320,8 @@ class ProcessingChain
      * @see State::parseStateID()
      * @return array|null The state referenced by the $id parameter.
      */
-    public static function fetchProcessedState($id)
+    public static function fetchProcessedState(string $id) : ?array
     {
-        assert(is_string($id));
-
         return State::loadState($id, self::COMPLETED_STAGE);
     }
 
@@ -346,9 +331,8 @@ class ProcessingChain
      * @param array &$state
      * @return void
      */
-    private static function addUserID(&$state)
+    private static function addUserID(array &$state) : void
     {
-        assert(is_array($state));
         assert(array_key_exists('Attributes', $state));
 
         if (isset($state['Destination']['userid.attribute'])) {

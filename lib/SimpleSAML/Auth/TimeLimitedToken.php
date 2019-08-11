@@ -43,7 +43,7 @@ class TimeLimitedToken
      *
      * @throws \InvalidArgumentException if the given parameters are invalid.
      */
-    public function __construct($lifetime = 900, $secretSalt = null, $skew = 1, $algo = 'sha256')
+    public function __construct(int $lifetime = 900, ?string $secretSalt = null, int $skew = 1, string $algo = 'sha256')
     {
         if ($secretSalt === null) {
             $secretSalt = Utils\Config::getSecretSalt();
@@ -70,7 +70,7 @@ class TimeLimitedToken
      * @param string $data The data to incorporate into the current token.
      * @return void
      */
-    public function addVerificationData($data)
+    public function addVerificationData(string $data) : void
     {
         $this->secretSalt .= '|'.$data;
     }
@@ -84,11 +84,10 @@ class TimeLimitedToken
      *
      * @return string The token for the given time and offset.
      */
-    private function calculateTokenValue($offset, $time = null)
+    private function calculateTokenValue(int $offset, ?int $time = null) : string
     {
-        if ($time === null) {
-            $time = time();
-        }
+        $time = $time ?? time();
+
         // a secret salt that should be randomly generated for each installation
         return hash(
             $this->algo,
@@ -102,7 +101,7 @@ class TimeLimitedToken
      *
      * @return string A time-limited token with the offset respect to the beginning of its time slot prepended.
      */
-    public function generate()
+    public function generate() : string
     {
         $time = time();
         $current_offset = ($time - $this->skew) % ($this->lifetime + $this->skew);
@@ -115,7 +114,7 @@ class TimeLimitedToken
      * @deprecated This method will be removed in SSP 2.0. Use generate() instead.
      * @return string
      */
-    public function generate_token()
+    public function generate_token() : string
     {
         return $this->generate();
     }
@@ -128,7 +127,7 @@ class TimeLimitedToken
      *
      * @return bool True if the given token is currently valid, false otherwise.
      */
-    public function validate($token)
+    public function validate(string $token) : bool
     {
         $splittoken = explode('-', $token);
         if (count($splittoken) !== 2) {
@@ -146,7 +145,7 @@ class TimeLimitedToken
      * @param string $token
      * @return bool
      */
-    public function validate_token($token)
+    public function validate_token(string $token) : bool
     {
         return $this->validate($token);
     }

@@ -52,10 +52,9 @@ abstract class BaseNameIDGenerator extends \SimpleSAML\Auth\ProcessingFilter
      * @param array $config  Configuration information about this filter.
      * @param mixed $reserved  For future use.
      */
-    public function __construct($config, $reserved)
+    public function __construct(array $config, $reserved)
     {
         parent::__construct($config, $reserved);
-        assert(is_array($config));
 
         if (isset($config['NameQualifier'])) {
             $this->nameQualifier = $config['NameQualifier'];
@@ -85,9 +84,8 @@ abstract class BaseNameIDGenerator extends \SimpleSAML\Auth\ProcessingFilter
      * @param array &$state  The request state.
      * @return void
      */
-    public function process(&$state)
+    public function process(array &$state) : void
     {
-        assert(is_array($state));
         assert(is_string($this->format));
 
         $value = $this->getValue($state);

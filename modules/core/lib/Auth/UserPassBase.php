@@ -197,10 +197,8 @@ abstract class UserPassBase extends \SimpleSAML\Auth\Source
      * @param array &$state  Information about the current authentication.
      * @return void
      */
-    public function authenticate(&$state)
+    public function authenticate(array &$state) : void
     {
-        assert(is_array($state));
-
         /*
          * Save the identifier of this authentication source, so that we can
          * retrieve it later. This allows us to call the login()-function on

@@ -34,7 +34,7 @@ class TestAuthSource extends \SimpleSAML\Auth\Source
     /**
      * @return void
      */
-    public function authenticate(&$state)
+    public function authenticate(array &$state) : void
     {
     }
 }
@@ -44,7 +44,7 @@ class TestAuthSourceFactory implements SourceFactory
     /**
      * @return \SimpleSAML\Test\Auth\TestAuthSource
      */
-    public function create(array $info, array $config)
+    public function create(array $info, array $config) : \SimpleSAML\Auth\Source
     {
         return new TestAuthSource($info, $config);
     }

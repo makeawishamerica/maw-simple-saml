@@ -212,10 +212,8 @@ abstract class UserPassOrgBase extends \SimpleSAML\Auth\Source
      * @param array &$state  Information about the current authentication.
      * @return void
      */
-    public function authenticate(&$state)
+    public function authenticate(array &$state) : void
     {
-        assert(is_array($state));
-
         // We are going to need the authId in order to retrieve this authentication source later
         $state[self::AUTHID] = $this->authId;
 

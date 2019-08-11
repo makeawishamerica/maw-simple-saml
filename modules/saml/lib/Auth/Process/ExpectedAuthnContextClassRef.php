@@ -48,11 +48,10 @@ class ExpectedAuthnContextClassRef extends \SimpleSAML\Auth\ProcessingFilter
      *
      * @throws \SimpleSAML\Error\Exception if the mandatory 'accepted' configuration option is missing.
      */
-    public function __construct($config, $reserved)
+    public function __construct(array $config, $reserved)
     {
         parent::__construct($config, $reserved);
 
-        assert(is_array($config));
         if (empty($config['accepted'])) {
             Logger::error(
                 'ExpectedAuthnContextClassRef: Configuration error. There is no accepted AuthnContextClassRef.'
@@ -70,9 +69,8 @@ class ExpectedAuthnContextClassRef extends \SimpleSAML\Auth\ProcessingFilter
      * @param array &$request The current request
      * @return void
      */
-    public function process(&$request)
+    public function process(array &$request) : void
     {
-        assert(is_array($request));
         assert(array_key_exists('saml:sp:State', $request));
 
         $this->AuthnContextClassRef = $request['saml:sp:State']['saml:sp:AuthnContext'];
