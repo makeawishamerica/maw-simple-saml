@@ -35,7 +35,7 @@ class Stats
      *
      * @return mixed A new instance of the configured class.
      */
-    private static function createOutput(\SimpleSAML\Configuration $config)
+    private static function createOutput(Configuration $config)
     {
         $cls = $config->getString('class');
         $cls = Module::resolveClass($cls, 'Stats\Output', '\SimpleSAML\Stats\Output');
@@ -50,9 +50,8 @@ class Stats
      *
      * @return void
      */
-    private static function initOutputs()
+    private static function initOutputs() : void
     {
-
         $config = Configuration::getInstance();
         $outputCfgs = $config->getConfigList('statistics.out');
 
@@ -71,9 +70,8 @@ class Stats
      *
      * @return void|boolean False if output is not enabled, void otherwise.
      */
-    public static function log($event, array $data = [])
+    public static function log(string $event, array $data = [])
     {
-        assert(is_string($event));
         assert(!isset($data['op']));
         assert(!isset($data['time']));
         assert(!isset($data['_id']));
