@@ -16,7 +16,6 @@ use SimpleSAML\Utils;
 
 class Language
 {
-
     /**
      * This is the default language map. It is used to map languages codes from the user agent to other language codes.
      */
@@ -162,7 +161,7 @@ class Language
      *
      * @return array The set of languages both in 'language.available' and self::$language_names.
      */
-    private function getInstalledLanguages()
+    private function getInstalledLanguages() : array
     {
         $configuredAvailableLanguages = $this->configuration->getArray('language.available', ['en']);
         $availableLanguages = [];
@@ -184,7 +183,7 @@ class Language
      *
      * @return string The language code.
      */
-    public function getPosixLanguage($language)
+    public function getPosixLanguage(string $language) : string
     {
         if (isset($this->languagePosixMapping[$language])) {
             return $this->languagePosixMapping[$language];
@@ -200,7 +199,7 @@ class Language
      * @param boolean $setLanguageCookie Whether to set the language cookie or not. Defaults to true.
      * @return void
      */
-    public function setLanguage($language, $setLanguageCookie = true)
+    public function setLanguage(string $language, bool $setLanguageCookie = true) : void
     {
         $language = strtolower($language);
         if (in_array($language, $this->availableLanguages, true)) {
@@ -220,7 +219,7 @@ class Language
      * @return string The language selected by the user according to the processing rules specified, or the default
      * language in any other case.
      */
-    public function getLanguage()
+    public function getLanguage() : string
     {
         // language is set in object
         if (isset($this->language)) {
@@ -260,7 +259,7 @@ class Language
      *
      * @return string|null The localized name of the language.
      */
-    public function getLanguageLocalizedName($code)
+    public function getLanguageLocalizedName(string $code) : ?string
     {
         if (array_key_exists($code, self::$language_names) && isset(self::$language_names[$code])) {
             return self::$language_names[$code];
@@ -275,7 +274,7 @@ class Language
      *
      * @return string The language parameter name.
      */
-    public function getLanguageParameterName()
+    public function getLanguageParameterName() : string
     {
         return $this->languageParameterName;
     }
@@ -287,7 +286,7 @@ class Language
      * @return string|null The preferred language based on the Accept-Language HTTP header,
      * or null if none of the languages in the header is available.
      */
-    private function getHTTPLanguage()
+    private function getHTTPLanguage() : ?string
     {
         $languageScore = Utils\HTTP::getAcceptLanguage();
 
@@ -328,7 +327,7 @@ class Language
      *
      * @return string The default language that has been configured. Defaults to english if not configured.
      */
-    public function getDefaultLanguage()
+    public function getDefaultLanguage() : string
     {
         return $this->defaultLanguage;
     }
@@ -340,7 +339,7 @@ class Language
      * @param string $langcode
      * @return string|null The alias, or null if the alias was not found.
      */
-    public function getLanguageCodeAlias($langcode)
+    public function getLanguageCodeAlias(string $langcode) : ?string
     {
         if (isset(self::$defaultLanguageMap[$langcode])) {
             return self::$defaultLanguageMap[$langcode];
@@ -356,7 +355,7 @@ class Language
      * @return array An array holding all the languages available as the keys of the array. The value for each key is
      * true in case that the language specified by that key is currently active, or false otherwise.
      */
-    public function getLanguageList()
+    public function getLanguageList() : array
     {
         $current = $this->getLanguage();
         $list = array_fill_keys($this->availableLanguages, false);
@@ -370,7 +369,7 @@ class Language
      *
      * @return boolean True if the language is right-to-left, false otherwise.
      */
-    public function isLanguageRTL()
+    public function isLanguageRTL() : bool
     {
         return in_array($this->getLanguage(), $this->rtlLanguages, true);
     }
@@ -381,7 +380,7 @@ class Language
      *
      * @return string|null The selected language or null if unset.
      */
-    public static function getLanguageCookie()
+    public static function getLanguageCookie() : ?string
     {
         $config = Configuration::getInstance();
         $availableLanguages = $config->getArray('language.available', ['en']);
@@ -405,10 +404,8 @@ class Language
      * @param string $language The language set by the user.
      * @return void
      */
-    public static function setLanguageCookie($language)
+    public static function setLanguageCookie(string $language) : void
     {
-        assert(is_string($language));
-
         $language = strtolower($language);
         $config = Configuration::getInstance();
         $availableLanguages = $config->getArray('language.available', ['en']);
