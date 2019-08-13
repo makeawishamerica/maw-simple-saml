@@ -100,7 +100,7 @@ class RedirectionController
             throw new Error\Exception('Invalid destination URL.');
         }
 
-        $t = new Template($this->config, 'post.php');
+        $t = new Template($this->config, 'post.twig');
         $t->data['destination'] = $postData['url'];
         $t->data['post'] = $postData['post'];
         return $t;

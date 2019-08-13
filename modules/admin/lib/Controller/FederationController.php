@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
  */
 class FederationController
 {
-
     /** @var \SimpleSAML\Configuration */
     protected $config;
 
@@ -173,7 +172,7 @@ class FederationController
                 $saml2entities = [];
                 if (count($idps) > 1) {
                     foreach ($idps as $index => $idp) {
-                        $idp['url'] = Module::getModuleURL('saml/2/idp/metadata/'.$idp['auth']);
+                        $idp['url'] = Module::getModuleURL('saml2/idp/metadata/'.$idp['auth']);
                         $idp['metadata-set'] = 'saml20-idp-hosted';
                         $idp['metadata-index'] = $index;
                         $idp['metadata_array'] = SAML2_IdP::getHostedMetadata($idp['entityid']);
@@ -387,6 +386,7 @@ class FederationController
         return $entities;
     }
 
+
     /**
      * Metadata converter
      *
@@ -453,6 +453,7 @@ class FederationController
         return $this->menu->insert($t);
     }
 
+
     /**
      * Download a certificate for a given entity.
      *
@@ -494,6 +495,7 @@ class FederationController
 
         return $response;
     }
+
 
     /**
      * Show remote entity metadata

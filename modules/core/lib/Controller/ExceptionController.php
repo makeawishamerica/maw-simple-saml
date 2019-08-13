@@ -70,13 +70,12 @@ class ExceptionController
             ' '.implode(',', array_keys($state['core:cardinality:errorAttributes']))
         );
 
-        $t = new Template($this->config, 'core:cardinality_error.tpl.php');
+        $t = new Template($this->config, 'core:cardinality_error.twig');
         $t->data['cardinalityErrorAttributes'] = $state['core:cardinality:errorAttributes'];
         if (isset($state['Source']['auth'])) {
             $t->data['LogoutURL'] = Module::getModuleURL(
-                'core/authenticate.php',
-                ['as' => $state['Source']['auth']]
-            )."&logout";
+                'core/login/'.urlencode($state['Source']['auth'])
+            );
         }
 
         $t->setStatusCode(403);
@@ -98,7 +97,7 @@ class ExceptionController
             $retryURL = Utils\HTTP::checkURLAllowed(strval($retryURL));
         }
 
-        $t = new Template($this->config, 'core:no_cookie.tpl.php');
+        $t = new Template($this->config, 'core:no_cookie.twig');
         $translator = $t->getTranslator();
 
         /** @var string $header */
@@ -145,9 +144,9 @@ class ExceptionController
             Auth\ProcessingChain::resumeProcessing($state);
         }
 
-        $t = new Template($this->config, 'core:short_sso_interval.tpl.php');
+        $t = new Template($this->config, 'core:short_sso_interval.twig');
         $translator = $t->getTranslator();
-        $t->data['target'] = Module::getModuleURL('core/short_sso_interval.php');
+        $t->data['target'] = Module::getModuleURL('core/warning/short_sso_interval');
         $t->data['params'] = ['StateId' => $stateId];
         $t->data['trackId'] = $this->session->getTrackID();
         $t->data['header'] = $translator->t('{core:short_sso_interval:warning_header}');
