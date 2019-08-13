@@ -11,6 +11,7 @@ use SimpleSAML\Session;
 use SimpleSAML\Utils;
 use SimpleSAML\XHTML\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Webmozart\Assert\Assert;
 
 /**
  * Controller class for the core module.
@@ -92,9 +93,9 @@ class Redirection
 
         $session->deleteData('core_postdatalink', $postId);
 
-        assert(is_array($postData));
-        assert(array_key_exists('url', $postData));
-        assert(array_key_exists('post', $postData));
+        Assert::isArray($postData);
+        Assert::keyExists($postData, 'url');
+        Assert::keyExists($postData, 'post');
 
         if (!Utils\HTTP::isValidURL($postData['url'])) {
             throw new Error\Exception('Invalid destination URL.');
