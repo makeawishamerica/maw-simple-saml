@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package SimpleSAML\Module\core
  */
-class LoginController
+class Login
 {
     /** @var \SimpleSAML\Configuration */
     protected $config;

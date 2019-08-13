@@ -22,9 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @package SimpleSAML\Module\admin
  */
-class TestController
+class Test
 {
-
     /** @var \SimpleSAML\Configuration */
     protected $config;
 
@@ -52,6 +51,7 @@ class TestController
     /**
      * Display the list of available authsources.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param string|null $as
      * @return \SimpleSAML\XHTML\Template
      */
@@ -151,7 +151,7 @@ class TestController
      * @param string $nameParent
      * @return string
      */
-    private function getAttributesHTML(Template $t, $attributes, $nameParent)
+    private function getAttributesHTML(Template $t, array $attributes, $nameParent)
     {
         $alternate = ['pure-table-odd', 'pure-table-even'];
         $i = 0;

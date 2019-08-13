@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package SimpleSAML\Module\core
  */
-class RedirectionController
+class Redirection
 {
     /** @var \SimpleSAML\Configuration */
     protected $config;
