@@ -41,10 +41,8 @@ class MetaDataStorageHandlerFlatFile extends MetaDataStorageSource
      *
      * @param array $config An associative array with the configuration for this handler.
      */
-    protected function __construct($config)
+    protected function __construct(array $config)
     {
-        assert(is_array($config));
-
         // get the configuration
         $globalConfig = Configuration::getInstance();
 
@@ -75,7 +73,7 @@ class MetaDataStorageHandlerFlatFile extends MetaDataStorageSource
      *     file.
      * @throws \Exception If the metadata set cannot be loaded.
      */
-    private function load($set)
+    private function load(string $set) : ?array
     {
         $metadatasetfile = $this->directory.$set.'.php';
 
@@ -104,7 +102,7 @@ class MetaDataStorageHandlerFlatFile extends MetaDataStorageSource
      * @return array An associative array with the metadata. Each element in the array is an entity, and the
      *         key is the entity id.
      */
-    public function getMetadataSet($set)
+    public function getMetadataSet(string $set) : array
     {
         if (array_key_exists($set, $this->cachedMetadata)) {
             return $this->cachedMetadata[$set];

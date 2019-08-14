@@ -72,10 +72,8 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      *
      * @throws \Exception If no server option can be found in the configuration.
      */
-    protected function __construct($config)
+    protected function __construct(array $config)
     {
-        assert(is_array($config));
-
         if (!array_key_exists('server', $config)) {
             throw new \Exception(__CLASS__.": the 'server' configuration option is not set.");
         } else {
@@ -115,7 +113,7 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      *
      * @return array An empty array.
      */
-    public function getMetadataSet($set)
+    public function getMetadataSet(string $set) : array
     {
         // we don't have this metadata set
         return [];
@@ -130,11 +128,8 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      *
      * @return string  The full path to the cache file.
      */
-    private function getCacheFilename($set, $entityId)
+    private function getCacheFilename(string $set, string $entityId) : string
     {
-        assert(is_string($set));
-        assert(is_string($entityId));
-
         if ($this->cacheDir === null) {
             throw new Error\ConfigurationError("Missing cache directory configuration.");
         }
@@ -154,11 +149,8 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      *                     if the entity could not be found.
      * @throws \Exception If an error occurs while loading metadata from cache.
      */
-    private function getFromCache($set, $entityId)
+    private function getFromCache(string $set, string $entityId) : ?array
     {
-        assert(is_string($set));
-        assert(is_string($entityId));
-
         if (empty($this->cacheDir)) {
             return null;
         }
@@ -214,12 +206,8 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      * @throws \Exception If metadata cannot be written to cache.
      * @return void
      */
-    private function writeToCache($set, $entityId, $data)
+    private function writeToCache(string $set, string $entityId, array $data) : void
     {
-        assert(is_string($set));
-        assert(is_string($entityId));
-        assert(is_array($data));
-
         if (empty($this->cacheDir)) {
             return;
         }
@@ -242,7 +230,7 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      * @return array|NULL  The associative array with the metadata, or NULL if no metadata for
      *                     the given set was found.
      */
-    private static function getParsedSet(SAMLParser $entity, $set)
+    private static function getParsedSet(SAMLParser $entity, string $set) : ?array
     {
         assert(is_string($set));
 
@@ -285,11 +273,8 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      * @throws \Exception If an error occurs while validating the signature or the metadata is in an
      *         incorrect set.
      */
-    public function getMetaData($index, $set)
+    public function getMetaData(string $index, string $set) : ?array
     {
-        assert(is_string($index));
-        assert(is_string($set));
-
         Logger::info(__CLASS__.': loading metadata entity ['.$index.'] from ['.$set.']');
 
         // read from cache if possible
@@ -365,7 +350,7 @@ class MDQ extends \SimpleSAML\Metadata\MetaDataStorageSource
      * @param string $set The set we want to get metadata from.
      * @return array An associative array with the metadata for the requested entities, if found.
      */
-    public function getMetaDataForEntities(array $entityIds, $set)
+    public function getMetaDataForEntities(array $entityIds, string $set) : array
     {
         return $this->getMetaDataForEntitiesIndividually($entityIds, $set);
     }
