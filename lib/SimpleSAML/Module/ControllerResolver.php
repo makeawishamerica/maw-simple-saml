@@ -54,7 +54,7 @@ class ControllerResolver extends SymfonyControllerResolver implements ArgumentRe
      *
      * @param string $module The name of the module.
      */
-    public function __construct($module)
+    public function __construct(string $module)
     {
         parent::__construct();
         $this->module = $module;
@@ -128,6 +128,7 @@ class ControllerResolver extends SymfonyControllerResolver implements ArgumentRe
      *
      * @throws \SimpleSAML\Error\Exception If we don't find anything suitable for an argument in the controller's
      * signature.
+     * NOTE: Further typehinting not possible due to upstream restrictions
      */
     public function getArguments(Request $request, $controller)
     {
@@ -173,7 +174,7 @@ class ControllerResolver extends SymfonyControllerResolver implements ArgumentRe
      * @param \SimpleSAML\Configuration $config
      * @return void
      */
-    public function setConfiguration(Configuration $config)
+    public function setConfiguration(Configuration $config) : void
     {
         $this->container->set(Configuration::class, $config);
         $this->container->register(Configuration::class)->setSynthetic(true)->setAutowired(true);
@@ -186,7 +187,7 @@ class ControllerResolver extends SymfonyControllerResolver implements ArgumentRe
      * @param \SimpleSAML\Session $session
      * @return void
      */
-    public function setSession(Session $session)
+    public function setSession(Session $session) : void
     {
         $this->container->set(Session::class, $session);
         $this->container->register(Session::class)
