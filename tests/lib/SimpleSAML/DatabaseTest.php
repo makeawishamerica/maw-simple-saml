@@ -51,7 +51,7 @@ class DatabaseTest extends TestCase
      * @covers SimpleSAML\Database::connect
      * @return void
      */
-    public function setUp()
+    public function setUp() : void
     {
         $config = [
             'database.dsn'        => 'sqlite::memory:',
@@ -299,7 +299,7 @@ class DatabaseTest extends TestCase
     /**
      * @return void
      */
-    public function tearDown()
+    public function tearDown() : void
     {
         $table = $this->db->applyPrefix("sspdbt");
         $this->db->write("DROP TABLE IF EXISTS $table");

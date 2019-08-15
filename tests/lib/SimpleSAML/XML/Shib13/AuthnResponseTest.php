@@ -59,7 +59,7 @@ XML;
     /**
      * @return void
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->xml = new AuthnResponse();
         $this->xml->setXML(static::XMLDOC);

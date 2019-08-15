@@ -43,7 +43,7 @@ class ControllerTest extends ClearStateTestCase
      * Set up for each test.
      * @return void
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $this->authSources = [

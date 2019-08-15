@@ -138,7 +138,7 @@ class AttributeLimitTest extends TestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         self::$request = [
             'Attributes' => [

@@ -16,7 +16,7 @@ class SQLPermanentStorageTest extends TestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         // Create instance
         $config = \SimpleSAML\Configuration::loadFromArray([
@@ -29,7 +29,7 @@ class SQLPermanentStorageTest extends TestCase
     /**
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         self::$sql = null;
         unlink(sys_get_temp_dir().'/sqllite/test.sqlite');

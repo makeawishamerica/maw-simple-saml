@@ -29,7 +29,7 @@ XML;
     /**
      * @return void
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->xml = new Parser(static::XMLDOC);
     }

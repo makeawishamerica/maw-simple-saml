@@ -35,7 +35,7 @@ class CardinalitySingleTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function setUp()
+    protected function setUp() : void
     {
         \SimpleSAML\Configuration::loadFromArray([], '[ARRAY]', 'simplesaml');
         $this->http = $this->getMockBuilder('SimpleSAML\Utils\HTTPAdapter')
