@@ -28,5 +28,5 @@ abstract class Output
      *
      * @param array $data The event.
      */
-    abstract public function emit(array $data);
+    abstract public function emit(array $data) : void;
 }

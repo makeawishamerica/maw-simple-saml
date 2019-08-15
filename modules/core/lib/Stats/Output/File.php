@@ -84,7 +84,7 @@ class File extends \SimpleSAML\Stats\Output
      * @param array $data  The event.
      * @return void
      */
-    public function emit(array $data)
+    public function emit(array $data) : void
     {
         assert(isset($data['time']));
 
