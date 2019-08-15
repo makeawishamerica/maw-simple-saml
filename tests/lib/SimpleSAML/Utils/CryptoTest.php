@@ -45,38 +45,6 @@ class CryptoTest extends TestCase
 
 
     /**
-     * Test invalid input provided to the aesDecrypt() method.
-     *
-     * @covers \SimpleSAML\Utils\Crypto::aesDecrypt
-     * @return void
-     */
-    public function testAesDecryptBadInput()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $m = new \ReflectionMethod('\SimpleSAML\Utils\Crypto', '_aesDecrypt');
-        $m->setAccessible(true);
-
-        $m->invokeArgs(null, [[], 'SECRET']);
-    }
-
-
-    /**
-     * Test invalid input provided to the aesEncrypt() method.
-     *
-     * @covers \SimpleSAML\Utils\Crypto::aesEncrypt
-     * @return void
-     */
-    public function testAesEncryptBadInput()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $m = new \ReflectionMethod('\SimpleSAML\Utils\Crypto', '_aesEncrypt');
-        $m->setAccessible(true);
-
-        $m->invokeArgs(null, [[], 'SECRET']);
-    }
-
-
-    /**
      * Test that aesDecrypt() works properly, being able to decrypt some previously known (and correct)
      * ciphertext.
      *

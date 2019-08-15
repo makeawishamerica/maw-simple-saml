@@ -25,14 +25,8 @@ class Crypto
      *
      * @see \SimpleSAML\Utils\Crypto::aesDecrypt()
      */
-    private static function _aesDecrypt($ciphertext, $secret)
+    private static function _aesDecrypt(string $ciphertext, string $secret) : string
     {
-        if (!is_string($ciphertext)) {
-            throw new \InvalidArgumentException(
-                'Input parameter "$ciphertext" must be a string with more than 48 characters.'
-            );
-        }
-        /** @var int $len */
         $len = mb_strlen($ciphertext, '8bit');
         if ($len < 48) {
             throw new \InvalidArgumentException(
@@ -81,7 +75,7 @@ class Crypto
      * @author Andreas Solberg, UNINETT AS <andreas.solberg@uninett.no>
      * @author Jaime Perez, UNINETT AS <jaime.perez@uninett.no>
      */
-    public static function aesDecrypt($ciphertext)
+    public static function aesDecrypt(string $ciphertext) : string
     {
         return self::_aesDecrypt($ciphertext, Config::getSecretSalt());
     }
@@ -99,12 +93,8 @@ class Crypto
      *
      * @see \SimpleSAML\Utils\Crypto::aesEncrypt()
      */
-    private static function _aesEncrypt($data, $secret)
+    private static function _aesEncrypt(string $data, string $secret) : string
     {
-        if (!is_string($data)) {
-            throw new \InvalidArgumentException('Input parameter "$data" must be a string.');
-        }
-
         if (!function_exists("openssl_encrypt")) {
             throw new Error\Exception('The openssl PHP module is not loaded.');
         }
@@ -146,7 +136,7 @@ class Crypto
      * @author Andreas Solberg, UNINETT AS <andreas.solberg@uninett.no>
      * @author Jaime Perez, UNINETT AS <jaime.perez@uninett.no>
      */
-    public static function aesEncrypt($data)
+    public static function aesEncrypt(string $data) : string
     {
         return self::_aesEncrypt($data, Config::getSecretSalt());
     }
@@ -160,7 +150,7 @@ class Crypto
      * @return string The same data encoded in PEM format.
      * @see RFC7648 for known types and PEM format specifics.
      */
-    public static function der2pem($der, $type = 'CERTIFICATE')
+    public static function der2pem(string $der, string $type = 'CERTIFICATE') : string
     {
         return "-----BEGIN ".$type."-----\n".
             chunk_split(base64_encode($der), 64, "\n").
@@ -195,12 +185,8 @@ class Crypto
      * @author Andreas Solberg, UNINETT AS <andreas.solberg@uninett.no>
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function loadPrivateKey(Configuration $metadata, $required = false, $prefix = '', $full_path = false)
+    public static function loadPrivateKey(Configuration $metadata, bool $required = false, string $prefix = '', bool $full_path = false) : ?array
     {
-        if (!is_bool($required) || !is_string($prefix) || !is_bool($full_path)) {
-            throw new \InvalidArgumentException('Invalid input parameters.');
-        }
-
         $file = $metadata->getString($prefix.'privatekey', null);
         if ($file === null) {
             // no private key found
@@ -265,12 +251,8 @@ class Crypto
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      * @author Lasse Birnbaum Jensen
      */
-    public static function loadPublicKey(Configuration $metadata, $required = false, $prefix = '')
+    public static function loadPublicKey(Configuration $metadata, bool $required = false, string $prefix = '') : ?array
     {
-        if (!is_bool($required) || !is_string($prefix)) {
-            throw new \InvalidArgumentException('Invalid input parameters.');
-        }
-
         $keys = $metadata->getPublicKeys(null, false, $prefix);
         if (!empty($keys)) {
             foreach ($keys as $key) {
@@ -327,7 +309,7 @@ class Crypto
      * @throws \InvalidArgumentException If $pem is not encoded in PEM format.
      * @see RFC7648 for PEM format specifics.
      */
-    public static function pem2der($pem)
+    public static function pem2der(string $pem) : string
     {
         $pem   = trim($pem);
         $begin = "-----BEGIN ";
@@ -365,13 +347,9 @@ class Crypto
      * @author Dyonisius Visser, TERENA <visser@terena.org>
      * @author Jaime Perez, UNINETT AS <jaime.perez@uninett.no>
      */
-    public static function pwHash($password, $algorithm = null, $salt = null)
+    public static function pwHash(string $password, ?string $algorithm = null, ?string $salt = null) : string
     {
         if (!is_null($algorithm)) {
-            // @deprecated Old-style
-            if (!is_string($algorithm) || !is_string($password)) {
-                throw new \InvalidArgumentException('Invalid input parameters.');
-            }
             // hash w/o salt
             if (in_array(strtolower($algorithm), hash_algos(), true)) {
                 $alg_str = '{'.str_replace('SHA1', 'SHA', $algorithm).'}'; // LDAP compatibility
@@ -382,25 +360,21 @@ class Crypto
             if ($salt === null) {
                 // no salt provided, generate one
                 // default 8 byte salt, but 4 byte for LDAP SHA1 hashes
-                $bytes = ($algorithm == 'SSHA1') ? 4 : 8;
+                $bytes = ($algorithm === 'SSHA1') ? 4 : 8;
                 $salt = openssl_random_pseudo_bytes($bytes);
             }
 
-            if ($algorithm[0] == 'S' && in_array(substr(strtolower($algorithm), 1), hash_algos(), true)) {
+            if ($algorithm[0] === 'S' && in_array(substr(strtolower($algorithm), 1), hash_algos(), true)) {
                 $alg = substr(strtolower($algorithm), 1); // 'sha256' etc
                 $alg_str = '{'.str_replace('SSHA1', 'SSHA', $algorithm).'}'; // LDAP compatibility
                 $hash = hash($alg, $password.$salt, true);
                 return $alg_str.base64_encode($hash.$salt);
             }
             throw new Error\Exception('Hashing algorithm \''.strtolower($algorithm).'\' is not supported');
-        } else {
-            if (!is_string($password)) {
-                throw new \InvalidArgumentException('Invalid input parameter.');
-            } elseif (!is_string($hash = password_hash($password, PASSWORD_DEFAULT))) {
-                throw new \InvalidArgumentException('Error while hashing password.');
-            }
-            return $hash;
+        } elseif (!is_string($hash = password_hash($password, PASSWORD_DEFAULT))) {
+            throw new \InvalidArgumentException('Error while hashing password.');
         }
+        return $hash;
     }
 
 
@@ -415,7 +389,7 @@ class Crypto
      *
      * @return bool True if both strings are equal, false otherwise.
      */
-    public static function secureCompare($known, $user)
+    public static function secureCompare(string $known, string $user) : bool
     {
         return hash_equals($known, $user);
     }
@@ -433,12 +407,8 @@ class Crypto
      *
      * @author Dyonisius Visser, TERENA <visser@terena.org>
      */
-    public static function pwValid($hash, $password)
+    public static function pwValid(string $hash, string $password) : bool
     {
-        if (!is_string($hash) || !is_string($password)) {
-            throw new \InvalidArgumentException('Invalid input parameters.');
-        }
-
         if (password_verify($password, $hash)) {
             return true;
         }

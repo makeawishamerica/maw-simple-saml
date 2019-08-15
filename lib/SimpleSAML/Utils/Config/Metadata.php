@@ -94,7 +94,7 @@ class Metadata
      *
      * otherwise it will just return the name as "givenName" in the resulting array.
      *
-     * @param array $contact The contact to parse and sanitize.
+     * @param array|null $contact The contact to parse and sanitize.
      *
      * @return array An array holding valid contact configuration options. If a key 'name' was part of the input array,
      * it will try to decompose the name into its parts, and place the parts into givenName and surName, if those are
@@ -102,12 +102,8 @@ class Metadata
      * @throws \InvalidArgumentException If $contact is neither an array nor null, or the contact does not conform to
      *     valid configuration rules for contacts.
      */
-    public static function getContact($contact)
+    public static function getContact(?array $contact) : array
     {
-        if (!(is_array($contact) || is_null($contact))) {
-            throw new \InvalidArgumentException('Invalid input parameters');
-        }
-
         // check the type
         if (!isset($contact['contactType']) || !in_array($contact['contactType'], self::$VALID_CONTACT_TYPES, true)) {
             $types = join(', ', array_map(
@@ -226,7 +222,7 @@ class Metadata
      *
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function getDefaultEndpoint(array $endpoints, array $bindings = null)
+    public static function getDefaultEndpoint(array $endpoints, array $bindings = null) : ?array
     {
         $firstNotFalse = null;
         $firstAllowed = null;
@@ -280,7 +276,7 @@ class Metadata
      *
      * @return boolean True if the entity should be hidden, false otherwise.
      */
-    public static function isHiddenFromDiscovery(array $metadata)
+    public static function isHiddenFromDiscovery(array $metadata) : bool
     {
         Logger::maskErrors(E_ALL);
         $hidden = in_array(self::$HIDE_FROM_DISCOVERY, $metadata['EntityAttributes'][self::$ENTITY_CATEGORY], true);
@@ -296,7 +292,7 @@ class Metadata
      *
      * @return null|array
      */
-    public static function parseNameIdPolicy($nameIdPolicy)
+    public static function parseNameIdPolicy($nameIdPolicy) : ?array
     {
         $policy = null;
 

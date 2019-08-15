@@ -40,10 +40,10 @@ class XML
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      * @author Jaime Perez, UNINETT AS <jaime.perez@uninett.no>
      */
-    public static function checkSAMLMessage($message, $type)
+    public static function checkSAMLMessage(string $message, string $type) : void
     {
         $allowed_types = ['saml20', 'saml11', 'saml-meta'];
-        if (!(is_string($message) && in_array($type, $allowed_types, true))) {
+        if (!in_array($type, $allowed_types, true)) {
             throw new \InvalidArgumentException('Invalid input parameters.');
         }
 
@@ -100,9 +100,9 @@ class XML
      *
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function debugSAMLMessage($message, $type)
+    public static function debugSAMLMessage($message, string $type) : void
     {
-        if (!(is_string($type) && (is_string($message) || $message instanceof DOMElement))) {
+        if (!(is_string($message) || $message instanceof DOMElement)) {
             throw new \InvalidArgumentException('Invalid input parameters.');
         }
 
@@ -163,12 +163,8 @@ class XML
      *
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function formatDOMElement(DOMNode $root, $indentBase = '')
+    public static function formatDOMElement(DOMNode $root, string $indentBase = '') : void
     {
-        if (!is_string($indentBase)) {
-            throw new \InvalidArgumentException('Invalid input parameters');
-        }
-
         // check what this element contains
         $fullText = ''; // all text in this element
         $textNodes = []; // text nodes which should be deleted
@@ -253,12 +249,8 @@ class XML
      *
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function formatXMLString($xml, $indentBase = '')
+    public static function formatXMLString(string $xml, string $indentBase = '') : string
     {
-        if (!is_string($xml) || !is_string($indentBase)) {
-            throw new \InvalidArgumentException('Invalid input parameters');
-        }
-
         try {
             $doc = DOMDocumentFactory::fromString($xml);
         } catch (\Exception $e) {
@@ -287,12 +279,8 @@ class XML
      * @throws \InvalidArgumentException If $element is not an instance of DOMElement, $localName is not a string or
      *     $namespaceURI is not a string.
      */
-    public static function getDOMChildren(DOMNode $element, $localName, $namespaceURI)
+    public static function getDOMChildren(DOMNode $element, string $localName, string $namespaceURI) : array
     {
-        if (!is_string($localName) || !is_string($namespaceURI)) {
-            throw new \InvalidArgumentException('Invalid input parameters.');
-        }
-
         $ret = [];
 
         for ($i = 0; $i < $element->childNodes->length; $i++) {
@@ -323,7 +311,7 @@ class XML
      *
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function getDOMText(DOMElement $element)
+    public static function getDOMText(DOMElement $element) : string
     {
         $txt = '';
 
@@ -364,9 +352,9 @@ class XML
      * @author Andreas Solberg, UNINETT AS <andreas.solberg@uninett.no>
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function isDOMNodeOfType(DOMNode $element, $name, $nsURI)
+    public static function isDOMNodeOfType(DOMNode $element, string $name, string $nsURI) : bool
     {
-        if (!is_string($name) || !is_string($nsURI) || strlen($nsURI) === 0) {
+        if (strlen($nsURI) === 0) {
             // most likely a comment-node
             return false;
         }
@@ -418,9 +406,9 @@ class XML
      *
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    public static function isValid($xml, $schema)
+    public static function isValid($xml, string $schema)
     {
-        if (!(is_string($schema) && (is_string($xml) || $xml instanceof DOMDocument))) {
+        if (!(is_string($xml) || $xml instanceof DOMDocument))) {
             throw new \InvalidArgumentException('Invalid input parameters.');
         }
 
