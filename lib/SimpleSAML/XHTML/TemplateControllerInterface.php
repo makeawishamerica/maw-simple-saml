@@ -19,7 +19,7 @@ interface TemplateControllerInterface
      *
      * @return void
      */
-    public function setUpTwig(Environment &$twig);
+    public function setUpTwig(Environment &$twig) : void;
 
 
     /**
@@ -31,5 +31,5 @@ interface TemplateControllerInterface
      *
      * @return void
      */
-    public function display(&$data);
+    public function display(array &$data) : void;
 }

@@ -122,7 +122,7 @@ class Template extends Response
      * @param string                   $template Which template file to load
      * @param string|null              $defaultDictionary The default dictionary where tags will come from.
      */
-    public function __construct(Configuration $configuration, $template, $defaultDictionary = null)
+    public function __construct(Configuration $configuration, string $template, string $defaultDictionary = null)
     {
         $this->configuration = $configuration;
         $this->template = $template;
@@ -169,7 +169,7 @@ class Template extends Response
      * @param string $asset
      * @return string
      */
-    public function asset($asset)
+    public function asset(string $asset) : string
     {
         $file = $this->configuration->getBaseDir().'www/assets/'.$asset;
         if (!file_exists($file)) {
@@ -191,7 +191,7 @@ class Template extends Response
      *
      * @return string The name of the template to use.
      */
-    public function getTemplateName()
+    public function getTemplateName() : string
     {
         return $this->normalizeTemplateName($this->template);
     }
@@ -203,7 +203,7 @@ class Template extends Response
      * @param string $templateName The template name to normalize.
      * @return string The filename we need to look for.
      */
-    private function normalizeTemplateName($templateName)
+    private function normalizeTemplateName(string $templateName) : string
     {
         if (strripos($templateName, '.twig')) {
             return $templateName;
@@ -230,7 +230,7 @@ class Template extends Response
      * @return TemplateLoader The twig template loader or false if the template does not exist.
      * @throws \Twig\Error\LoaderError In case a failure occurs.
      */
-    private function setupTwigTemplatepaths()
+    private function setupTwigTemplatepaths() : TemplateLoader
     {
         $filename = $this->normalizeTemplateName($this->template);
 
@@ -271,7 +271,7 @@ class Template extends Response
      * @return \Twig\Environment
      * @throws \Exception if the template does not exist
      */
-    private function setupTwig()
+    private function setupTwig() : \Twig\Environment
     {
         $auto_reload = $this->configuration->getBoolean('template.auto_reload', true);
         $cache = $this->configuration->getString('template.cache', false);
@@ -345,7 +345,7 @@ class Template extends Response
      *
      * @return array An array of module => templatedir lookups.
      */
-    private function findThemeTemplateDirs()
+    private function findThemeTemplateDirs() : array
     {
         if (!isset($this->theme['module'])) {
             // no module involved
@@ -385,7 +385,7 @@ class Template extends Response
      *
      * @throws \InvalidArgumentException If the module is not enabled or it has no templates directory.
      */
-    private function getModuleTemplateDir($module)
+    private function getModuleTemplateDir(string $module) : string
     {
         if (!Module::isModuleEnabled($module)) {
             throw new \InvalidArgumentException('The module \''.$module.'\' is not enabled.');
@@ -409,7 +409,7 @@ class Template extends Response
      * @throws \InvalidArgumentException If the module is not enabled or it has no templates directory.
      * @return void
      */
-    public function addTemplatesFromModule($module)
+    public function addTemplatesFromModule(string $module) : void
     {
         $dir = TemplateLoader::getModuleTemplateDir($module);
         /** @var \Twig\Loader\FilesystemLoader $loader */
@@ -424,7 +424,7 @@ class Template extends Response
      *
      * @return array|null The array containing information of all available languages.
      */
-    private function generateLanguageBar()
+    private function generateLanguageBar() : ?array
     {
         $languages = $this->translator->getLanguage()->getLanguageList();
         ksort($languages);
@@ -456,7 +456,7 @@ class Template extends Response
      * Set some default context
      * @return void
      */
-    private function twigDefaultContext()
+    private function twigDefaultContext() : void
     {
         // show language bar by default
         if (!isset($this->data['hideLanguageBar'])) {
@@ -493,7 +493,7 @@ class Template extends Response
      * @return string The HTML rendered by this template, as a string.
      * @throws \Exception if the template cannot be found.
      */
-    protected function getContents()
+    protected function getContents() : string
     {
         $this->twigDefaultContext();
         if ($this->controller) {
@@ -509,7 +509,7 @@ class Template extends Response
      * @return Response This response.
      * @throws \Exception if the template cannot be found.
      */
-    public function send()
+    public function send() : Response
     {
         $this->content = $this->getContents();
         return parent::send();
@@ -525,7 +525,7 @@ class Template extends Response
      * @return void
      * @deprecated Do not use this method, use Twig + send() instead. Will be removed in 2.0
      */
-    public function show()
+    public function show() : void
     {
         if ($this->useNewUI) {
             echo $this->getContents();
@@ -542,7 +542,7 @@ class Template extends Response
      *
      * @return array An array with the name of the module and template
      */
-    private function findModuleAndTemplateName($template)
+    private function findModuleAndTemplateName(string $template) : array
     {
         $tmp = explode(':', $template, 2);
         return (count($tmp) === 2) ? [$tmp[0], $tmp[1]] : [null, $tmp[0]];
@@ -565,7 +565,7 @@ class Template extends Response
      *
      * @throws \Exception If the template file couldn't be found.
      */
-    private function findTemplatePath($template, $throw_exception = true)
+    private function findTemplatePath(string $template, bool $throw_exception = true) : ?string
     {
         assert(is_string($template));
         $extensions = ['.tpl.php', '.php'];
@@ -637,7 +637,7 @@ class Template extends Response
      *
      * @return \SimpleSAML\Locale\Translate The translator that will be used with this template.
      */
-    public function getTranslator()
+    public function getTranslator() : Translate
     {
         return $this->translator;
     }
@@ -648,7 +648,7 @@ class Template extends Response
      *
      * @return \SimpleSAML\Locale\Localization The localization object that will be used with this template.
      */
-    public function getLocalization()
+    public function getLocalization() : Localization
     {
         return $this->localization;
     }
@@ -659,7 +659,7 @@ class Template extends Response
      *
      * @return \Twig\Environment The Twig instance in use, or null if Twig is not used.
      */
-    public function getTwig()
+    public function getTwig() : \Twig\Environment
     {
         return $this->twig;
     }
@@ -677,7 +677,7 @@ class Template extends Response
      * @deprecated This method will be removed in SSP 2.0. Please use \SimpleSAML\Locale\Language::getLanguage()
      * instead.
      */
-    public function getAttributeTranslation($name)
+    public function getAttributeTranslation(string $name) : string
     {
         return $this->translator->getAttributeTranslation($name);
     }
@@ -688,7 +688,7 @@ class Template extends Response
      * @deprecated This method will be removed in SSP 2.0. Please use \SimpleSAML\Locale\Language::getLanguage()
      * instead.
      */
-    public function getLanguage()
+    public function getLanguage() : string
     {
         return $this->translator->getLanguage()->getLanguage();
     }
@@ -702,7 +702,7 @@ class Template extends Response
      * @deprecated This method will be removed in SSP 2.0. Please use \SimpleSAML\Locale\Language::setLanguage()
      * instead.
      */
-    public function setLanguage($language, $setLanguageCookie = true)
+    public function setLanguage(string $language, bool $setLanguageCookie = true) : void
     {
         $this->translator->getLanguage()->setLanguage($language, $setLanguageCookie);
     }
@@ -713,7 +713,7 @@ class Template extends Response
      * @deprecated This method will be removed in SSP 2.0. Please use \SimpleSAML\Locale\Language::getLanguageCookie()
      * instead.
      */
-    public static function getLanguageCookie()
+    public static function getLanguageCookie() : ?string
     {
         return Language::getLanguageCookie();
     }
@@ -726,7 +726,7 @@ class Template extends Response
      * @deprecated This method will be removed in SSP 2.0. Please use \SimpleSAML\Locale\Language::setLanguageCookie()
      * instead.
      */
-    public static function setLanguageCookie($language)
+    public static function setLanguageCookie(string $language) : void
     {
         Language::setLanguageCookie($language);
     }
@@ -737,7 +737,7 @@ class Template extends Response
      *
      * @return array
      */
-    private function getLanguageList()
+    private function getLanguageList() : array
     {
         return $this->translator->getLanguage()->getLanguageList();
     }
@@ -749,7 +749,7 @@ class Template extends Response
      * @return array|null
      * @deprecated This method will be removed in SSP 2.0. Please use \SimpleSAML\Locale\Translate::getTag() instead.
      */
-    public function getTag($tag)
+    public function getTag(string $tag) : ?array
     {
         return $this->translator->getTag($tag);
     }
@@ -764,7 +764,7 @@ class Template extends Response
      * @param array $translations
      * @return string
      */
-    public function getTranslation($translations)
+    public function getTranslation(array $translations) : string
     {
         return $this->translator->getPreferredTranslation($translations);
     }
@@ -778,7 +778,7 @@ class Template extends Response
      * @param string $file
      * @return void
      */
-    private function includeAtTemplateBase($file)
+    private function includeAtTemplateBase(string $file) : void
     {
         $data = $this->data;
 
@@ -799,7 +799,7 @@ class Template extends Response
      * @param string $translation
      * @return void
      */
-    public function includeInlineTranslation($tag, $translation)
+    public function includeInlineTranslation(string $tag, string $translation) : void
     {
         $this->translator->includeInlineTranslation($tag, $translation);
     }
@@ -813,7 +813,7 @@ class Template extends Response
      * @deprecated This method will be removed in SSP 2.0. Please use
      * \SimpleSAML\Locale\Translate::includeLanguageFile() instead.
      */
-    public function includeLanguageFile($file, $otherConfig = null)
+    public function includeLanguageFile(string $file, Configuration $otherConfig = null)
     {
         $this->translator->includeLanguageFile($file, $otherConfig);
     }
@@ -824,7 +824,7 @@ class Template extends Response
      *
      * @return bool
      */
-    private function isLanguageRTL()
+    private function isLanguageRTL() : bool
     {
         return $this->translator->getLanguage()->isLanguageRTL();
     }
@@ -839,7 +839,7 @@ class Template extends Response
      * @return array The recursive merge of both arrays.
      * @deprecated This method will be removed in SimpleSAMLphp 2.0. Please use array_merge_recursive() instead.
      */
-    public static function lang_merge($def, $lang)
+    public static function lang_merge(array $def, array $lang) : array
     {
         foreach ($def as $key => $value) {
             if (array_key_exists($key, $lang)) {
@@ -859,7 +859,7 @@ class Template extends Response
      * @param string $tag
      * @return string
      */
-    public static function noop($tag)
+    public static function noop(string $tag) : string
     {
         return $tag;
     }
@@ -879,12 +879,12 @@ class Template extends Response
      * @return string|null
      */
     public function t(
-        $tag,
-        $replacements = [],
-        $fallbackdefault = true,
-        $oldreplacements = [],
-        $striptags = false
-    ) {
+        string $tag,
+        array $replacements = [],
+        bool $fallbackdefault = true,
+        array $oldreplacements = [],
+        bool $striptags = false
+    ) : ?string {
         return $this->translator->t($tag, $replacements, $fallbackdefault, $oldreplacements, $striptags);
     }
 }
