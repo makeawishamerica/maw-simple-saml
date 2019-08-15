@@ -9,6 +9,8 @@
 
 namespace SimpleSAML\XML;
 
+use DOMNode;
+use DOMDocument;
 use RobRichards\XMLSecLibs\XMLSecEnc;
 use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use SimpleSAML\Logger;
@@ -45,10 +47,8 @@ class Validator
      * @param array|bool $publickey The public key / certificate which should be used to validate the XML node.
      * @throws \Exception
      */
-    public function __construct($xmlNode, $idAttribute = null, $publickey = false)
+    public function __construct(DOMDocument $xmlNode, $idAttribute = null, $publickey = false)
     {
-        assert($xmlNode instanceof \DOMDocument);
-
         if ($publickey === null) {
             $publickey = false;
         } elseif (is_string($publickey)) {
@@ -145,7 +145,7 @@ class Validator
      *
      * @return string|null  The certificate as a PEM-encoded string, or NULL if not signed with an X509 certificate.
      */
-    public function getX509Certificate()
+    public function getX509Certificate() : ?string
     {
         return $this->x509Certificate;
     }
@@ -159,10 +159,8 @@ class Validator
      * @return string|null  The fingerprint as a 40-character lowercase hexadecimal number. NULL is returned if the
      *                 argument isn't an X509 certificate.
      */
-    private static function calculateX509Fingerprint($x509cert)
+    private static function calculateX509Fingerprint(string $x509cert) : ?string
     {
-        assert(is_string($x509cert));
-
         $lines = explode("\n", $x509cert);
 
         $data = '';
@@ -203,11 +201,8 @@ class Validator
      * @throws \Exception
      * @return void
      */
-    private static function validateCertificateFingerprint($certificate, $fingerprints)
+    private static function validateCertificateFingerprint(string $certificate, array $fingerprints) : void
     {
-        assert(is_string($certificate));
-        assert(is_array($fingerprints));
-
         $certFingerprint = self::calculateX509Fingerprint($certificate);
         if ($certFingerprint === null) {
             // Couldn't calculate fingerprint from X509 certificate. Should not happen.
@@ -242,7 +237,7 @@ class Validator
      * @throws \Exception
      * @return void
      */
-    public function validateFingerprint($fingerprints)
+    public function validateFingerprint($fingerprints) : void
     {
         assert(is_string($fingerprints) || is_array($fingerprints));
 
@@ -273,10 +268,8 @@ class Validator
      *
      * @return bool  TRUE if this node (or a parent node) was signed. FALSE if not.
      */
-    public function isNodeValidated($node)
+    public function isNodeValidated(DOMNode $node) : bool
     {
-        assert($node instanceof \DOMNode);
-
         if ($this->validNodes !== null) {
             while ($node !== null) {
                 if (in_array($node, $this->validNodes, true)) {
@@ -303,16 +296,15 @@ class Validator
      * @throws \Exception
      * @return void
      */
-    public function validateCA($caFile)
+    public function validateCA(string $caFile) : void
     {
-        assert(is_string($caFile));
-
         if ($this->x509Certificate === null) {
             throw new \Exception('Key used to sign the message was not an X509 certificate.');
         }
 
         self::validateCertificate($this->x509Certificate, $caFile);
     }
+
 
     /**
      * Validate a certificate against a CA file, by using the builtin
@@ -323,11 +315,8 @@ class Validator
      * @return boolean|string TRUE on success, or a string with error messages if it failed.
      * @deprecated
      */
-    private static function validateCABuiltIn($certificate, $caFile)
+    private static function validateCABuiltIn(string $certificate, string $caFile)
     {
-        assert(is_string($certificate));
-        assert(is_string($caFile));
-
         // Clear openssl errors
         while (openssl_error_string() !== false) {
         }
@@ -361,11 +350,8 @@ class Validator
      * @throws \Exception
      * @deprecated
      */
-    private static function validateCAExec($certificate, $caFile)
+    private static function validateCAExec(string $certificate, string $caFile)
     {
-        assert(is_string($certificate));
-        assert(is_string($caFile));
-
         $command = [
             'openssl', 'verify',
             '-CAfile', $caFile,
@@ -421,11 +407,8 @@ class Validator
      * @return void
      * @deprecated
      */
-    public static function validateCertificate($certificate, $caFile)
+    public static function validateCertificate(string $certificate, string $caFile) : void
     {
-        assert(is_string($certificate));
-        assert(is_string($caFile));
-
         if (!file_exists($caFile)) {
             throw new \Exception('Could not load CA file: '.$caFile);
         }

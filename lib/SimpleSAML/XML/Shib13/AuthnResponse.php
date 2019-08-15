@@ -12,6 +12,7 @@ namespace SimpleSAML\XML\Shib13;
 
 use DOMDocument;
 use DOMNode;
+use DOMNodeList;
 use DOMXpath;
 use SAML2\DOMDocumentFactory;
 use SimpleSAML\Configuration;
@@ -59,10 +60,8 @@ class AuthnResponse
      * @param bool $messageValidated  TRUE if the message is already validated, FALSE if not.
      * @return void
      */
-    public function setMessageValidated($messageValidated)
+    public function setMessageValidated(bool $messageValidated) : void
     {
-        assert(is_bool($messageValidated));
-
         $this->messageValidated = $messageValidated;
     }
 
@@ -72,10 +71,8 @@ class AuthnResponse
      * @throws \Exception
      * @return void
      */
-    public function setXML($xml)
+    public function setXML(string $xml) : void
     {
-        assert(is_string($xml));
-
         try {
             $this->dom = DOMDocumentFactory::fromString(str_replace("\r", "", $xml));
         } catch (\Exception $e) {
@@ -88,7 +85,7 @@ class AuthnResponse
      * @param string|null $relayState
      * @return void
      */
-    public function setRelayState($relayState)
+    public function setRelayState(?string $relayState) : void
     {
         $this->relayState = $relayState;
     }
@@ -97,7 +94,7 @@ class AuthnResponse
     /**
      * @return string|null
      */
-    public function getRelayState()
+    public function getRelayState() : ?string
     {
         return $this->relayState;
     }
@@ -107,7 +104,7 @@ class AuthnResponse
      * @throws \SimpleSAML\Error\Exception
      * @return bool
      */
-    public function validate()
+    public function validate() : bool
     {
         assert($this->dom instanceof DOMDocument);
 
@@ -160,7 +157,7 @@ class AuthnResponse
      * @param \DOMElement|\SimpleXMLElement $node Node to be validated.
      * @return bool TRUE if the node is validated or FALSE if not.
      */
-    private function isNodeValidated($node)
+    private function isNodeValidated($node) : bool
     {
         if ($this->messageValidated) {
             // This message was validated externally
@@ -190,9 +187,8 @@ class AuthnResponse
      *                        then the query will be relative to the root of the response.
      * @return \DOMNodeList
      */
-    private function doXPathQuery($query, $node = null)
+    private function doXPathQuery(string $query, DOMNode $node = null) : DOMNodeList
     {
-        assert(is_string($query));
         assert($this->dom instanceof DOMDocument);
 
         if ($node === null) {
@@ -214,7 +210,7 @@ class AuthnResponse
      *
      * @return string|null  The session index of this response.
      */
-    public function getSessionIndex()
+    public function getSessionIndex() : ?string
     {
         assert($this->dom instanceof DOMDocument);
 
@@ -227,12 +223,12 @@ class AuthnResponse
         return null;
     }
 
-    
+
     /**
      * @throws \Exception
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes() : array
     {
         $metadata = MetaDataStorageHandler::getMetadataHandler();
         $md = $metadata->getMetaData($this->getIssuer(), 'shib13-idp-remote');
@@ -307,12 +303,12 @@ class AuthnResponse
         return $attributes;
     }
 
-    
+
     /**
      * @throws \Exception
      * @return string
      */
-    public function getIssuer()
+    public function getIssuer() : string
     {
         $query = '/shibp:Response/shib:Assertion/@Issuer';
         $nodelist = $this->doXPathQuery($query);
@@ -328,7 +324,7 @@ class AuthnResponse
     /**
      * @return array
      */
-    public function getNameID()
+    public function getNameID() : array
     {
         $nameID = [];
 
@@ -353,11 +349,8 @@ class AuthnResponse
      * @param array|null $attributes The attributes which should be included in the response.
      * @return string The response.
      */
-    public function generate(Configuration $idp, Configuration $sp, $shire, $attributes)
+    public function generate(Configuration $idp, Configuration $sp, string $shire, ?array $attributes) : string
     {
-        assert(is_string($shire));
-        assert($attributes === null || is_array($attributes));
-
         if ($sp->hasValue('scopedattributes')) {
             $scopedAttributes = $sp->getArray('scopedattributes');
         } elseif ($idp->hasValue('scopedattributes')) {
@@ -367,13 +360,12 @@ class AuthnResponse
         }
 
         $id = Utils\Random::generateID();
-        
+
         $issueInstant = Utils\Time::generateTimestamp();
-        
+
         // 30 seconds timeskew back in time to allow differing clocks
         $notBefore = Utils\Time::generateTimestamp(time() - 30);
-        
-        
+
         $assertionExpire = Utils\Time::generateTimestamp(time() + 300); // 5 minutes
         $assertionid = Utils\Random::generateID();
 
@@ -453,13 +445,8 @@ class AuthnResponse
      * @param array $scopedAttributes  Array of attributes names which are scoped.
      * @return string  The attribute encoded as an XML-string.
      */
-    private function encAttribute($name, $values, $base64, $scopedAttributes)
+    private function encAttribute(string $name, array $values, bool $base64, array $scopedAttributes) : string
     {
-        assert(is_string($name));
-        assert(is_array($values));
-        assert(is_bool($base64));
-        assert(is_array($scopedAttributes));
-
         if (in_array($name, $scopedAttributes, true)) {
             $scoped = true;
         } else {
@@ -489,6 +476,7 @@ class AuthnResponse
         return $attr;
     }
 
+
     /**
      * Check if we are currently between the given date & time conditions.
      *
@@ -506,7 +494,7 @@ class AuthnResponse
      * @author Andreas Solberg, UNINETT AS <andreas.solberg@uninett.no>
      * @author Olav Morken, UNINETT AS <olav.morken@uninett.no>
      */
-    protected static function checkDateConditions($start = null, $end = null)
+    protected static function checkDateConditions(?string $start = null, ?string $end = null) : bool
     {
         $currentTime = time();
 

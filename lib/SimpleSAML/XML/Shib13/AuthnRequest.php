@@ -26,26 +26,26 @@ class AuthnRequest
      * @param string|null $relayState
      * @return void
      */
-    public function setRelayState($relayState)
+    public function setRelayState(?string $relayState) : void
     {
         $this->relayState = $relayState;
     }
-    
+
 
     /**
      * @return string|null
      */
-    public function getRelayState()
+    public function getRelayState() : ?string
     {
         return $this->relayState;
     }
-    
+
 
     /**
      * @param string|null $issuer
      * @return void
      */
-    public function setIssuer($issuer)
+    public function setIssuer(?string $issuer) : void
     {
         $this->issuer = $issuer;
     }
@@ -54,7 +54,7 @@ class AuthnRequest
     /**
      * @return string|null
      */
-    public function getIssuer()
+    public function getIssuer() : ?string
     {
         return $this->issuer;
     }
@@ -65,7 +65,7 @@ class AuthnRequest
      * @param string $shire
      * @return string
      */
-    public function createRedirect($destination, $shire)
+    public function createRedirect(string $destination, string $shire) : string
     {
         $metadata = MetaDataStorageHandler::getMetadataHandler();
         $idpmetadata = $metadata->getMetaDataConfig($destination, 'shib13-idp-remote');
