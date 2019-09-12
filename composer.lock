@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53ffaee529106b8a39c9afac3ec5d314",
+    "content-hash": "c25f8943ace3f28dcdca6c8cd3b21269",
     "packages": [
         {
             "name": "gettext/gettext",
@@ -434,16 +434,16 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v4.0.1",
+            "version": "v4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "fe540d3bdaf3ea95c8e51ecf14c7f103cea8dcf0"
+                "reference": "299162390ff1ec1c2cc864bc49d8e1b7df1b07dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/fe540d3bdaf3ea95c8e51ecf14c7f103cea8dcf0",
-                "reference": "fe540d3bdaf3ea95c8e51ecf14c7f103cea8dcf0",
+                "url": "https://api.github.com/repos/simplesamlphp/saml2/zipball/299162390ff1ec1c2cc864bc49d8e1b7df1b07dc",
+                "reference": "299162390ff1ec1c2cc864bc49d8e1b7df1b07dc",
                 "shasum": ""
             },
             "require": {
@@ -485,7 +485,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2019-09-06T09:03:45+00:00"
+            "time": "2019-09-12T19:01:04+00:00"
         },
         {
             "name": "simplesamlphp/simplesamlphp-module-adfs",
