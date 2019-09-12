@@ -1117,17 +1117,13 @@ class SAMLParser
                     foreach ($e->getKeywords() as $uiItem) {
                         $keywords = $uiItem->getKeywords();
                         $language = $uiItem->getLanguage();
-                        if (($keywords === []) || ($language === null)) {
+                        if (($keywords === [])) {
                             continue;
                         }
                         $ret['UIInfo']['Keywords'][$language] = $keywords;
                     }
                     foreach ($e->getLogo() as $uiItem) {
-                        if (!($uiItem instanceof Logo)
-                            || ($uiItem->getUrl() === null)
-                            || ($uiItem->getHeight() === null)
-                            || ($uiItem->getWidth() === null)
-                        ) {
+                        if (!($uiItem instanceof Logo)) {
                             continue;
                         }
                         $logo = [
