@@ -340,10 +340,6 @@ class LogoutStore
         }
 
         // serialize and anonymize the NameID
-        // TODO: remove this conditional statement
-        if (is_array($nameId)) {
-            $nameId = NameID::fromArray($nameId);
-        }
         $strNameId = serialize($nameId);
         $strNameId = sha1($strNameId);
 
@@ -382,10 +378,6 @@ class LogoutStore
         }
 
         // serialize and anonymize the NameID
-        // TODO: remove this conditional statement
-        if (is_array($nameId)) {
-            $nameId = NameID::fromArray($nameId);
-        }
         $strNameId = serialize($nameId);
         $strNameId = sha1($strNameId);
 
