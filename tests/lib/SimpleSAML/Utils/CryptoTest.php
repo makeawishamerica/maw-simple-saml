@@ -397,7 +397,7 @@ PHP;
         file_put_contents($filename, $data);
 
         $res = Crypto::loadPrivateKey($config, false, '', $full_path);
-        $expected = ['PEM' => $data];
+        $expected = ['PEM' => $data, 'password' => null];
 
         $this->assertEquals($expected, $res);
     }
