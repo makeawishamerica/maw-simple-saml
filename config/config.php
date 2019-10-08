@@ -138,14 +138,14 @@ $config = [
      * metadata listing and diagnostics pages.
      * You can also put a hash here; run "bin/pwgen.php" to generate one.
      */
-    'auth.adminpassword' => 'P@$$w0rd!',
+    'auth.adminpassword' => 'Xdck%yF5FyJ%2pCX9C',
 
     /*
      * Set this options to true if you want to require administrator password to access the web interface
      * or the metadata pages, respectively.
      */
-    'admin.protectindexpage' => false,
-    'admin.protectmetadata' => false,
+    'admin.protectindexpage' => true,
+    'admin.protectmetadata' => true,
 
     /*
      * Set this option to false if you don't want SimpleSAMLphp to check for new stable releases when
@@ -251,7 +251,7 @@ $config = [
      */
     'debug' => [
         'saml' => false,
-        'backtraces' => true,
+        'backtraces' => false,
         'validatexml' => false,
     ],
 
@@ -262,7 +262,7 @@ $config = [
      * When 'errorreporting' is enabled, a form will be presented for the user to report
      * the error to 'technicalcontact_email'.
      */
-    'showerrors' => true,
+    'showerrors' => false,
     'errorreporting' => true,
 
     /*
@@ -340,12 +340,12 @@ $config = [
      * The process name that should be used when logging to syslog.
      * The value is also written out by the other logging handlers.
      */
-    'logging.processname' => 'simplesamlphp',
+    'logging.processname' => 'simple-saml',
 
     /*
      * Logging: file - Logfilename in the loggingdir from above.
      */
-    'logging.logfile' => 'simplesamlphp.log',
+    'logging.logfile' => 'simple-saml.log',
 
     /*
      * This is an array of outputs. Each output has at least a 'class' option, which
@@ -410,7 +410,7 @@ $config = [
     /*
      * SQL database credentials
      */
-    'database.username' => 'simplesamlphp',
+    'database.username' => 'simple-saml',
     'database.password' => 'secret',
     'database.options' => [],
 
@@ -443,7 +443,7 @@ $config = [
         /*
         [
             'dsn' => 'mysql:host=myslave;dbname=saml',
-            'username' => 'simplesamlphp',
+            'username' => 'simple-saml',
             'password' => 'secret',
             'persistent' => false,
         ],
@@ -744,9 +744,10 @@ $config = [
      * Languages available, RTL languages, and what language is the default.
      */
     'language.available' => [
-        'en', 'no', 'nn', 'se', 'da', 'de', 'sv', 'fi', 'es', 'ca', 'fr', 'it', 'nl', 'lb',
+        'en',
+        /* 'no', 'nn', 'se', 'da', 'de', 'sv', 'fi', 'es', 'ca', 'fr', 'it', 'nl', 'lb',
         'cs', 'sl', 'lt', 'hr', 'hu', 'pl', 'pt', 'pt-br', 'tr', 'ja', 'zh', 'zh-tw', 'ru',
-        'et', 'he', 'id', 'sr', 'lv', 'ro', 'eu', 'el', 'af', 'zu', 'xh',
+        'et', 'he', 'id', 'sr', 'lv', 'ro', 'eu', 'el', 'af', 'zu', 'xh',*/
     ],
     'language.rtl' => ['ar', 'dv', 'fa', 'ur', 'he'],
     'language.default' => 'en',
@@ -1087,7 +1088,7 @@ $config = [
      *      [
      *          'type' => 'mdq',
      *          'server' => 'http://mdq.server.com:8080',
-     *          'cachedir' => '/var/simplesamlphp/mdq-cache',
+     *          'cachedir' => '/var/simple-saml/mdq-cache',
      *          'cachelength' => 86400
      *      ]
      * ],
