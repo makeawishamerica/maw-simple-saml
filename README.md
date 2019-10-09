@@ -222,7 +222,12 @@ The following tools and permissions are needed for PowerShell:
     ```
 #### Wrap Application to Authenticate Using SAML
 * Login to the server where your application is stored
-* Add the following code to the top of your PHP file, replacing <Entity ID> with the Entity ID from Step 1 of the [Setup SSO with SAML](#SetupSsoWithSaml) section
+* Add the following code to the top of your PHP file, replacing <Entity ID> with the Entity ID from Step 1 of the [Setup SSO with SAML](#SetupSsoWithSaml) section. Ensure that your required path is correct to reach the SAML libraries
+    ```php
+        require_once("../simple-saml/lib/_autoload.php");
+        $as = new SimpleSAML_Auth_Simple('<Entity ID>');
+        $as->requireAuth();
+      ```
 * Open a browser in Incognito Mode
 * Enter the URL of your application
 * Ensure you are immediately prompted to enter your AD credentials
