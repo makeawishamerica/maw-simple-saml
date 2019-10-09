@@ -28,7 +28,7 @@ The following tools and permissions are needed for PowerShell:
     > Login to Azure Tenant as Admin. **Navigate to Azure Active Directory** (if not available add it to favorites from 'All Services'). Click Properties. Note the "**Directory ID**" ____________________________
 * PHP 7+ Installed on External Application Server
 * Simple SAML for PHP setup on external server
-    > Extension should be stored under the C:\inetpub folder at the same level as the application to be wrapped. (ie If application is at C:\inetpub\wwwroot_myapp, the extension should be stored at C:\inetpub\wwwroot_simple-saml.) Admin password can be secured from your local admin. 
+    > Extension should be stored under the C:\inetpub folder at the same level as the application to be wrapped. (ie If application is at C:\inetpub\wwwroot_myapp, the extension should be stored at C:\inetpub\wwwroot_simple-saml.) Admin password can be secured from your local admin. For setup instructions, visit [https://simplesamlphp.org/docs/stable/simplesamlphp-install](https://simplesamlphp.org/docs/stable/simplesamlphp-install)
 * IIS access to exernal PHP application (cPanel Access on Linux Server)
 
 
@@ -172,7 +172,9 @@ The following tools and permissions are needed for PowerShell:
         * Ensure that Application ID URI is set
         * Click on "**Redirect URIs**"
             * Ensure that the Redirect URI is set to the same Reply URL from the [Setup SSO with SAML](#SetupSsoWithSaml) section.
-
+            * Ensure that "**ID Tokens**" is selected in Advanced Settings
+            * Click "**Save**"
+  
 ### `Wrap PHP Application using SAML/PHP Extension`
 
 #### Setup Webserver
