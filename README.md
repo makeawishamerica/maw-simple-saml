@@ -227,7 +227,7 @@ The following tools and permissions are needed for PowerShell:
         require_once("../simple-saml/lib/_autoload.php");
         $as = new SimpleSAML_Auth_Simple('<Entity ID>');
         $as->requireAuth();
-      ```
+    ```
 * Save the file
 * Open a browser in Incognito Mode
 * Enter the URL of your application
