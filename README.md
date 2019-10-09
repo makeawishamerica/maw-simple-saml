@@ -228,6 +228,7 @@ The following tools and permissions are needed for PowerShell:
         $as = new SimpleSAML_Auth_Simple('<Entity ID>');
         $as->requireAuth();
       ```
+* Save the file
 * Open a browser in Incognito Mode
 * Enter the URL of your application
 * Ensure you are immediately prompted to enter your AD credentials
