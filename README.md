@@ -3,6 +3,23 @@ In order to authenticate our PHP applications with Azure AD, all PHP application
 
 
 **Table of Contents**
+- [MAW Simple SAML for PHP](#maw-simple-saml-for-php)
+  - [Prerequisites Before Wrapping Application](#prerequisites-before-wrapping-application)
+  - [Wrapping External PHP Applications](#wrapping-external-php-applications)
+    - [`Register Enterprise Application`](#register-enterprise-application)
+    - [`Wrap PHP Application using SAML/PHP Extension`](#wrap-php-application-using-samlphp-extension)
+      - [Setup Webserver](#setup-webserver)
+        - [Windows Setup](#windows-setup)
+        - [LINUX Setup](#linux-setup)
+      - [Configure Application for SAML Authentication](#configure-application-for-saml-authentication)
+        - [Save Signing Certificate for Application](#save-signing-certificate-for-application)
+        - [Add a New Authencation Source](#add-a-new-authencation-source)
+        - [Wrap Application to Authenticate Using SAML](#wrap-application-to-authenticate-using-saml)
+        - [Test Application](#test-application)
+  - [Wrapping Internal Applications in Azure](#wrapping-internal-applications-in-azure)
+    - [`Create Application Service`](#create-application-service)
+    - [`Create Application Registration`](#create-application-registration)
+    - [`Test Application`](#test-application)
 
 ## Prerequisites Before Wrapping Application
 The following tools and permissions are needed for PowerShell:
@@ -158,7 +175,7 @@ The following tools and permissions are needed for PowerShell:
 
 ### `Wrap PHP Application using SAML/PHP Extension`
 
-#### Setup Webserver and Store Application Data
+#### Setup Webserver
 
 ##### Windows Setup
 * Setup Virtual Directory in IIS
@@ -170,7 +187,9 @@ The following tools and permissions are needed for PowerShell:
 ##### LINUX Setup
 * Coming Soon
 
-#### Save Signing Certificate for Application
+#### Configure Application for SAML Authentication
+
+##### Save Signing Certificate for Application
 * Locate the federation file downloaded from Step 3 of the [Setup SSO with SAML](#SetupSsoWithSaml) section and open it.
     * Location the element `<X509Certificate>` and note the contents. You will need this in the next step.
 * Open Windows Explorer on the remote server and navigate to the installation directory of the simple SAML extension and open the following file <install-dir>\metadata\saml20-idp-remote.php.
@@ -201,7 +220,7 @@ The following tools and permissions are needed for PowerShell:
     'X509Certificate' => '<Federation X509Certificate>',
     ),
     ```
-#### Add a New Authencation Source
+##### Add a New Authencation Source
 * Open Windows Explorer and navigate to the installation directory of the simple SAML extension and open the following file <install-dir>\config\authsources.php.
 * Recall the Entity ID from Step 1 of the [Setup SSO with SAML](#SetupSsoWithSaml) section
 * Recall the Azure AD Indentifier from Step 4 of the [Setup SSO with SAML](#SetupSsoWithSaml) section
@@ -220,7 +239,7 @@ The following tools and permissions are needed for PowerShell:
         'discoURL' => null,
     ],
     ```
-#### Wrap Application to Authenticate Using SAML
+##### Wrap Application to Authenticate Using SAML
 * Login to the server where your application is stored
 * Add the following code to the top of your PHP file, replacing <Entity ID> with the Entity ID from Step 1 of the [Setup SSO with SAML](#SetupSsoWithSaml) section. Ensure that your required path is correct to reach the SAML libraries
     ```php
@@ -229,12 +248,14 @@ The following tools and permissions are needed for PowerShell:
         $as->requireAuth();
     ```
 * Save the file
+
+##### Test Application
 * Open a browser in Incognito Mode
 * Enter the URL of your application
 * Ensure you are immediately prompted to enter your AD credentials
 * Ensure after successful login you can view your application page
 
-## Wrapping PHP Applications in Azure
+## Wrapping Internal Applications in Azure
 
 ![](https://azuredemo.wish.org/simple-saml/assets/poc-internal-apps.png "External Application SSO Authentication")
 
